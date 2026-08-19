@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homerun Practice</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#062448">
+<link rel="icon" type="image/png" sizes="32x32" href="brand/icon-32.png">
+<link rel="apple-touch-icon" href="brand/icon-180.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a href="#app-main" class="skip-link">Skip to content</a>
+
+<header class="app-bar no-print">
+  <img src="brand/crest.png" alt="Homerun Baseball Ottawa" class="app-logo">
+  <div class="app-bar-title">
+    <h1>Homerun Practice</h1>
+    <span class="app-bar-sub">Practice Planner</span>
+  </div>
+  <nav class="app-nav" aria-label="Main navigation">
+    <button type="button" class="nav-btn active" data-view="planner">Practice Planner</button>
+    <button type="button" class="nav-btn nav-btn-readme" data-view="help">Help &amp; Guide</button>
+  </nav>
+</header>
+
+<main id="app-main">
+
+  <!-- PRACTICE PLANNER VIEW -->
+  <section id="view-planner" class="view active practice-view">
+    <h2>Practice Planner</h2>
+    <p class="hint">Browse 368 drills sourced from the Youth Baseball Canada knowledge base. Search, filter by skill or intensity, view full drill details, and assemble a timed practice plan to print or share.</p>
+
+    <!-- Practice view layout: two-column on wide screens -->
+    <div class="practice-layout">
+
+      <!-- LEFT: Drill Library + Plan Builder controls -->
+      <div class="practice-left">
+
+        <!-- SESSION CONFIG -->
+        <div class="practice-panel">
+          <div class="practice-panel-head" data-psection="session">
+            <span>Session Configuration</span>
+            <span class="pchevron">&#9660;</span>
+          </div>
+          <div class="practice-panel-body" id="psec-session">
+            <div class="pform-two-col">
+              <div class="pfield">
+                <label for="pp-team">Team Name</label>
+                <input type="text" id="pp-team" placeholder="e.g. Royals 12U" autocomplete="off">
+              </div>
+              <div class="pfield">
+                <label for="pp-date">Date</label>
+                <input type="date" id="pp-date">
+              </div>
+            </div>
+            <div class="pfield">
+              <label for="pp-theme">Practice Theme / Focus</label>
+              <input type="text" id="pp-theme" placeholder="e.g. Fielding fundamentals" autocomplete="off">
+            </div>
+            <div class="pfield">
+              <label for="pp-location">Location</label>
+              <input type="text" id="pp-location" placeholder="e.g. Kinsmen Park — Diamond 2" autocomplete="off">
+            </div>
+            <div class="pform-two-col">
+              <div class="pfield">
+                <label for="pp-start">Start Time</label>
+                <input type="time" id="pp-start" value="16:00">
+              </div>
+              <div class="pfield">
+                <label for="pp-duration">Session Duration</label>
+                <select id="pp-duration">
+                  <option value="30">30 min</option>
+                  <option value="60">60 min</option>
+                  <option value="75">75 min</option>
+                  <option value="90" selected>90 min</option>
+                  <option value="120">120 min</option>
+                  <option value="150">150 min</option>
+                  <option value="180">3 hours</option>
+                </select>
+              </div>
+            </div>
+            <div class="pfield">
+              <label for="pp-notes">Coach's Notes</label>
+              <textarea id="pp-notes" rows="2" placeholder="e.g. Limit Tommy to soft toss today. Field may be wet — skip slow rollers."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- TIME BUDGET BAR -->
+        <div class="practice-panel practice-budget-panel">
+          <div class="pbudget-label">
+            <span>Session Time Budget</span>
+            <span id="pbudget-fraction">0 / 90 min</span>
+          </div>
+          <div class="pbudget-track">
+            <div class="pbudget-fill pbudget-ok" id="pbudget-bar" style="width:0%"></div>
+          </div>
+          <div class="pbudget-detail">
+            <span id="pbudget-left">0 min used</span>
+            <span id="pbudget-right">90 min available</span>
+          </div>
+        </div>
+
+        <!-- DRILL SEARCH & FILTER -->
+        <div class="practice-panel">
+          <div class="practice-panel-head" data-psection="drills">
+            <span>Drill Library</span>
+            <span class="pchevron">&#9660;</span>
+          </div>
+          <div class="practice-panel-body" id="psec-drills">
+            <div class="pdrill-search-row">
+              <div class="pdrill-search-wrap">
+                <span class="pdrill-search-ico" aria-hidden="true">&#128269;</span>
+                <input type="search" id="pdrill-search" placeholder="Search drills by name, skill, or tags…" aria-label="Search drills by name, skill, or tags" autocomplete="off">
+              </div>
+              <button type="button" class="btn-secondary pdrill-clear-btn" id="pdrill-search-clear" title="Clear search" aria-label="Clear search" style="display:none">&#10005;</button>
+            </div>
+            <!-- Skill category chips -->
+            <div class="pchips" id="pskill-chips" role="group" aria-label="Filter by skill category">
+              <button type="button" class="pchip active" data-skill="">All Skills</button>
+              <button type="button" class="pchip" data-skill="hitting">Hitting</button>
+              <button type="button" class="pchip" data-skill="throwing">Throwing</button>
+              <button type="button" class="pchip" data-skill="infield">Infield</button>
+              <button type="button" class="pchip" data-skill="outfield">Outfield</button>
+              <button type="button" class="pchip" data-skill="catching">Catching</button>
+              <button type="button" class="pchip" data-skill="pitching">Pitching</button>
+              <button type="button" class="pchip" data-skill="baserunning">Baserunning</button>
+              <button type="button" class="pchip" data-skill="bunting">Bunting</button>
+              <button type="button" class="pchip" data-skill="situational">Situational</button>
+              <button type="button" class="pchip" data-skill="conditioning">Conditioning</button>
+            </div>
+            <!-- Intensity chips -->
+            <div class="pchips" id="pint-chips" role="group" aria-label="Filter by intensity">
+              <button type="button" class="pchip active" data-intensity="">All Intensity</button>
+              <button type="button" class="pchip pchip-low" data-intensity="low">Low</button>
+              <button type="button" class="pchip pchip-med" data-intensity="medium">Medium</button>
+              <button type="button" class="pchip pchip-high" data-intensity="high">High</button>
+            </div>
+            <!-- Age filter -->
+            <div class="pform-two-col" style="margin-top:0.5rem">
+              <div class="pfield">
+                <label for="pp-age-filter">Age Range</label>
+                <select id="pp-age-filter">
+                  <option value="">All ages</option>
+                  <option value="5-8">5–8U (T-Ball)</option>
+                  <option value="8-10">8–10U (Minor)</option>
+                  <option value="10-12">10–12U (Major)</option>
+                  <option value="12-14">12–14U (Intermediate)</option>
+                  <option value="14-18">14U+ (Junior/Senior)</option>
+                </select>
+              </div>
+              <div class="pfield" style="display:flex;align-items:flex-end;padding-bottom:0.1rem">
+                <label style="display:flex;align-items:center;gap:0.4rem;font-weight:normal;font-size:var(--text-sm);cursor:pointer;text-transform:none">
+                  <input type="checkbox" id="pp-show-all-ages" style="width:15px;height:15px">
+                  Show all ages
+                </label>
+              </div>
+            </div>
+            <!-- Search status + results count -->
+            <div id="pdrill-status" class="pdrill-status" aria-live="polite" aria-atomic="true"></div>
+          </div>
+        </div>
+
+        <!-- DRILL CARDS LIST -->
+        <div class="pdrill-cards-scroll" id="pdrill-cards" role="list" aria-label="Drill results"></div>
+
+        <!-- SKILL-FOCUSED PLANS -->
+        <div class="practice-panel">
+          <div class="practice-panel-head" data-psection="plans">
+            <span>Skill-Focused Plans</span>
+            <span class="pchevron">&#9660;</span>
+          </div>
+          <div class="practice-panel-body" id="psec-plans">
+            <div class="pplan-tabs" id="pplan-skill-tabs" role="tablist" aria-label="Filter plans by skill"></div>
+            <div class="pplan-gallery" id="pplan-gallery" role="list"></div>
+          </div>
+        </div>
+
+        <!-- PLAN ACTIONS -->
+        <div class="practice-plan-actions">
+          <button type="button" class="btn-secondary" id="pp-btn-undo" disabled>&#8617; Undo Last</button>
+          <button type="button" class="btn-secondary btn-danger" id="pp-btn-clear">Clear Plan</button>
+        </div>
+
+      </div><!-- /.practice-left -->
+
+      <!-- RIGHT: Current Plan -->
+      <div class="practice-right">
+        <div class="practice-panel practice-plan-panel">
+          <div class="practice-plan-header" id="practice-plan-header">
+            <div class="practice-plan-title-row">
+              <h3 id="practice-plan-h3">Practice Plan</h3>
+              <div class="practice-plan-hdr-actions no-print">
+                <button type="button" class="btn-secondary btn-sm" id="pp-btn-save" title="Save plan to browser storage">Save</button>
+                <button type="button" class="btn-secondary btn-sm" id="pp-btn-load" title="Load a saved plan">Load</button>
+                <button type="button" class="btn-secondary btn-sm" id="pp-btn-export" title="Download all saved plans as a JSON file">Export</button>
+                <button type="button" class="btn-secondary btn-sm" id="pp-btn-import" title="Import saved plans from a JSON file">Import</button>
+                <button type="button" class="btn-secondary btn-sm" id="pp-btn-print" title="Print or save as PDF">Print / PDF</button>
+                <input type="file" id="pp-file-import" accept="application/json,.json" hidden>
+              </div>
+            </div>
+            <div id="practice-plan-meta" class="practice-plan-meta"></div>
+          </div>
+
+          <!-- Mode toggle: Sequential drills (legacy, per-drill time) vs Stations (per-station time) -->
+          <div class="pmode-toggle no-print" id="pmode-toggle" role="radiogroup" aria-label="Practice plan mode">
+            <label class="pmode-toggle-option">
+              <input type="radio" name="pp-mode" id="pp-mode-sequential" value="sequential" checked>
+              Sequential drills
+            </label>
+            <label class="pmode-toggle-option">
+              <input type="radio" name="pp-mode" id="pp-mode-stations" value="stations">
+              Stations
+            </label>
+          </div>
+
+          <!-- STATIONS MODE UI -->
+          <div class="pstations-wrap hidden" id="pstations-wrap">
+            <div class="pstations-controls">
+              <label for="pp-station-count">Number of stations</label>
+              <input type="number" id="pp-station-count" min="1" max="10" value="2">
+            </div>
+            <div id="pstations-list" class="pstations-list" aria-label="Practice plan stations" role="list"></div>
+          </div>
+
+          <!-- Plan items list — reorderable (sequential mode only) -->
+          <div id="practice-plan-items" class="practice-plan-items" aria-label="Practice plan drill list" role="list">
+            <div class="ppempty" id="ppempty">
+              <p>No drills added yet.</p>
+              <p class="hint">Search the Drill Library on the left and click <strong>+ Add</strong> to build your plan.</p>
+            </div>
+          </div>
+
+          <!-- Plan footer: total duration -->
+          <div class="practice-plan-footer" id="practice-plan-footer">
+            <span class="ppfooter-label">Total:</span>
+            <span id="ppfooter-total">0 min</span>
+            <span class="ppfooter-count" id="ppfooter-count"></span>
+          </div>
+        </div>
+      </div><!-- /.practice-right -->
+
+    </div><!-- /.practice-layout -->
+  </section>
+
+  <!-- HELP & GUIDE VIEW -->
+  <section id="view-help" class="view">
+    <h2>Help &amp; Guide</h2>
+    <div class="readme-content">
+
+      <section class="readme-section">
+        <h3>What is this app?</h3>
+        <p>Homerun Practice helps coaches build timed baseball practice plans from a library of 368 drills sourced from the Youth Baseball Canada knowledge base. It runs entirely in your browser — no account, no server, no internet required after the first load. All data is saved locally in your browser.</p>
+        <p><strong>Getting started in 3 steps:</strong></p>
+        <ol>
+          <li>Fill in the <strong>Session Configuration</strong> — team, date, theme, and how much time you have.</li>
+          <li>Search or filter the <strong>Drill Library</strong> and click <strong>+</strong> on any drill to add it to your plan (or load a <strong>Skill-Focused Plan</strong> to start from a template).</li>
+          <li>Click <strong>Save</strong> to keep the plan, or <strong>Print / PDF</strong> to hand it to your team.</li>
+        </ol>
+      </section>
+
+      <section class="readme-section">
+        <h3>📲 Add to your Home Screen</h3>
+        <p>Install this app so it opens full-screen, without the browser bar — just like a native app.</p>
+        <p><strong>On iPhone/iPad (Safari):</strong></p>
+        <ol>
+          <li>Tap the Share icon in Safari's toolbar.</li>
+          <li>Scroll down and tap Add to Home Screen.</li>
+          <li>Tap Add — the app icon now appears on your Home Screen and opens full-screen, without the browser bar.</li>
+        </ol>
+        <p><strong>On Mac (Safari):</strong></p>
+        <ol>
+          <li>Click the Share icon in Safari's toolbar (or use the File menu).</li>
+          <li>Choose Add to Dock.</li>
+          <li>The app now opens from your Dock in its own window, like a native app.</li>
+        </ol>
+      </section>
+
+      <section class="readme-section">
+        <h3>🆕 Version, updates &amp; feedback</h3>
+        <p>The version you are running is shown in the footer at the bottom of every screen — for example <strong>v1.0</strong>. Version numbers work like this: a small update adds <strong>0.1</strong>, and a big update adds <strong>1.0</strong>.</p>
+        <p><strong>Staying up to date:</strong> when the app starts, it quietly checks whether a newer version has been published. If there is one, you'll see an <strong>Update available</strong> message with an <strong>Update now</strong> button. Updating only refreshes the app files — your saved practice plans are stored on this device and are never touched. If you're offline, the check is skipped and the app works exactly as usual.</p>
+        <p><strong>What's new:</strong> the first time you open a new version, a short summary of the changes appears. You can bring it back any time from the <strong>What's new</strong> link in the footer.</p>
+        <p><strong>Full history:</strong> <a href="changelog.html">open the version history page</a> to see every release, its date, and what changed.</p>
+        <p><strong>Found a problem, or have an idea?</strong> Use the button below (or <strong>Send feedback</strong> in the footer). Rate the app, pick what your feedback is about, and describe what happened — the app writes the email for you and opens it in your mail app, addressed to the Homerun Baseball Ottawa team.</p>
+        <p><button type="button" id="readme-feedback-btn" class="btn-secondary">💬 Send feedback</button></p>
+      </section>
+
+      <section class="readme-section">
+        <h3>Practice Planner</h3>
+        <ul>
+          <li><strong>Search:</strong> type in the search box to find drills by name, skill, or tags.</li>
+          <li><strong>Filter by skill:</strong> click a skill chip (Hitting, Throwing, Infield, etc.) to narrow the list.</li>
+          <li><strong>Filter by intensity:</strong> Low / Medium / High — useful for warm-up vs. main work vs. conditioning.</li>
+          <li><strong>Filter by age:</strong> select an age range to see only age-appropriate drills.</li>
+          <li><strong>Drill cards:</strong> click any drill card to see the full detail — purpose, setup, coaching cues, execution steps, common faults, and equipment needed.</li>
+          <li><strong>Add to plan:</strong> click the + button on a drill card to add it to your practice plan. Click again to remove it.</li>
+          <li><strong>Reorder drills:</strong> use the ↑↓ arrows on plan items to rearrange the order.</li>
+          <li><strong>Stations mode:</strong> switch the plan to Stations to run several drill groups at once, with a single time allocation per station instead of per drill.</li>
+          <li><strong>Time budget:</strong> the bar shows how much of your session time is used up.</li>
+          <li><strong>Skill-Focused Plans:</strong> pre-built plans organized by skill — click any plan card to load it instantly.</li>
+          <li><strong>Save / Load:</strong> save your plan to browser storage and load it later.</li>
+          <li><strong>Print / PDF:</strong> generates a printable practice plan with timeline, drill details, and coach's notes.</li>
+        </ul>
+      </section>
+
+      <section class="readme-section">
+        <h3>Export &amp; Import saved plans</h3>
+        <p>Because your data lives in <em>this browser on this device</em>, it isn't automatically shared with another device or browser.</p>
+        <ul>
+          <li><strong>Export:</strong> downloads all of your saved plans as a single <code>.json</code> file. Use this to back them up or move them to another device.</li>
+          <li><strong>Import:</strong> loads plans from a previously exported file. Plans are added to what you already have — a plan with the same name as one you already saved will be overwritten, but everything else stays untouched.</li>
+        </ul>
+      </section>
+
+    </div>
+  </section>
+
+</main>
+
+<footer id="app-footer" class="app-footer no-print">
+  <span class="app-footer-name">Homerun Practice</span>
+  <span class="app-footer-version">v<span id="app-version-label"></span></span>
+  <button type="button" id="footer-whats-new" class="app-footer-link">What's new</button>
+  <a href="changelog.html" id="footer-changelog" class="app-footer-link">Version history</a>
+  <button type="button" id="footer-feedback" class="app-footer-link">Send feedback</button>
+</footer>
+
+<!-- PRACTICE PRINT ROOT: populated just before window.print() -->
+<div id="practice-print-root" class="print-only" style="display:none"></div>
+
+<!-- Modal dialog (Load saved plan, import confirm, etc.) -->
+<div id="modal-overlay" class="modal-overlay hidden no-print">
+  <div class="modal-box" id="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title"></div>
+</div>
+
+<!-- Drill Detail Modal -->
+<div id="drill-detail-overlay" class="modal-overlay hidden no-print" role="dialog" aria-modal="true" aria-labelledby="drill-detail-title">
+  <div class="modal-box drill-detail-box" id="drill-detail-box"></div>
+</div>
+
+<!-- Toast notification -->
+<div id="pp-toast" class="pp-toast" aria-live="assertive" aria-atomic="true"></div>
+
+<!-- version.js must load before versionCompat.js and shell.js -->
+<script src="version.js"></script>
+<script src="versionCompat.js"></script>
+<!-- Release history + shared modal helper: must load before feedback.js and appUpdates.js -->
+<script src="changelog.js"></script>
+<script src="uiModal.js"></script>
+<!-- Drill data: generated by npm run sync:drills — load before practice.js -->
+<script src="src/drills-data.js"></script>
+<script src="shell.js" defer></script>
+<script src="practice.js" defer></script>
+<script src="feedback.js" defer></script>
+<script src="appUpdates.js" defer></script>
+<script>
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    navigator.serviceWorker.register('./sw.js');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "homerun-practice-app",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-p", "5198", "."],
+      "port": 5198
+    }
+  ]
+}

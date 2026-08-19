@@ -1,0 +1,1185 @@
+/* ===================================================================
+   Homerun Practice — styles.css
+   Design tokens and shared chrome match the Homerun Baseball Ottawa
+   visual identity (same brand tokens as Homerun Lineup / the marketing
+   site) — do not alter the five brand hex values below.
+   =================================================================== */
+
+:root {
+  --brand-navy: #062448;
+  --brand-navy-2: #14294d;
+  --brand-red: #a3301f;
+  --brand-red-2: #8d2418;
+  --brand-cream: #f6f3ec;
+
+  --color-bg: var(--brand-cream);
+  --color-surface: #ffffff;
+  --color-border: #d8d3c6;
+  --color-text: var(--brand-navy);
+  --color-muted: #4a5568;
+  --color-primary: var(--brand-navy);
+  --color-primary-dark: var(--brand-navy);
+  --color-primary-hover: var(--brand-navy-2);
+
+  --radius: 6px;
+
+  --text-xs:   0.70rem;
+  --text-sm:   0.82rem;
+  --text-base: 0.90rem;
+  --text-md:   1.00rem;
+  --text-lg:   1.10rem;
+  --text-xl:   1.40rem;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+h1, h2, h3, h4 { margin: 0 0 0.4em 0; line-height: 1.25; }
+h2 { font-size: var(--text-xl); border-bottom: 2px solid var(--brand-navy); padding-bottom: 0.3em; }
+h3 { font-size: var(--text-lg); }
+h4 { font-size: var(--text-md); }
+
+p { margin: 0.4em 0; }
+
+.hint { color: var(--color-muted); font-size: var(--text-sm); }
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px; left: 0;
+  background: var(--color-primary-dark);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  font-size: var(--text-base);
+  font-weight: 700;
+  z-index: 200;
+  border-radius: 0 0 var(--radius) 0;
+  text-decoration: none;
+  transition: top 0.15s;
+}
+.skip-link:focus { top: 0; }
+
+/* ---------------- App bar ---------------- */
+.app-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--color-primary-dark);
+  color: #fff;
+  padding: 0.6rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.app-logo {
+  height: 44px; width: 44px;
+  display: block;
+  background: #fff;
+  border-radius: 50%;
+  padding: 2px;
+  flex: 0 0 auto;
+}
+.app-bar-title h1 { font-size: 1.15rem; margin: 0; }
+.app-bar-sub { font-size: var(--text-sm); opacity: 0.85; }
+.app-nav { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+.nav-btn {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: var(--radius);
+  padding: 0.4rem 0.85rem;
+  cursor: pointer;
+  font-size: var(--text-base);
+  min-height: 34px;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.25); }
+.nav-btn.active { background: #fff; color: var(--color-primary-dark); font-weight: 600; }
+.nav-btn-readme { background: var(--brand-cream); border-color: var(--brand-cream); color: var(--brand-navy); }
+.nav-btn-readme:hover { background: #fff; }
+.nav-btn-readme.active { background: #fff; color: var(--brand-navy); }
+
+/* ---------------- Main / views ---------------- */
+#app-main { padding: 1rem; max-width: 1400px; margin: 0 auto; }
+.view { display: none; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+.view.active { display: block; }
+
+/* ---------------- Buttons ---------------- */
+button {
+  font-family: inherit;
+  font-size: var(--text-base);
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: var(--radius);
+  cursor: pointer;
+  min-height: 36px;
+}
+button:hover { background: var(--brand-navy-2); border-color: var(--brand-navy-2); }
+button.btn-secondary { background: #fff; color: var(--color-primary); }
+button.btn-secondary:hover { background: #efeadd; }
+button.btn-danger {
+  background: #fff;
+  color: var(--brand-red);
+  border: 1px solid var(--brand-red);
+}
+button.btn-danger:hover {
+  background: var(--brand-red);
+  color: #fff;
+  border-color: var(--brand-red);
+}
+button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+input[type="checkbox"] { width: 1.1rem; height: 1.1rem; cursor: pointer; }
+
+/* ---------------- Modal ---------------- */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(15,20,30,0.5);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+}
+.modal-overlay.hidden { display: none; }
+.modal-box {
+  background: #fff; border-radius: 8px; padding: 1.25rem 1.5rem;
+  max-width: 520px; width: 92%; max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+.modal-box h3 { margin-top: 0; }
+.modal-actions { display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1rem; flex-wrap: wrap; }
+
+/* ---------------- Print container (hidden on screen) ---------------- */
+.print-only { display: none; }
+
+/* ---------------- Help & Guide content ---------------- */
+.readme-content { max-width: 760px; }
+.readme-section { margin-bottom: 2rem; }
+.readme-section h3 {
+  font-size: var(--text-lg);
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.2rem;
+}
+.readme-section h4 { font-size: var(--text-md); margin: 1rem 0 0.25rem; }
+.readme-section p, .readme-section ul, .readme-section ol {
+  margin: 0.3rem 0 0.5rem;
+  line-height: 1.6;
+  font-size: var(--text-base);
+}
+.readme-section ul, .readme-section ol { padding-left: 1.4rem; }
+.readme-section li { margin-bottom: 0.3rem; }
+
+/* ---------------------------------------------------------------
+   App footer — in-flow bar
+   --------------------------------------------------------------- */
+.app-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid rgba(6, 36, 72, 0.12);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  background: #efebe3;
+}
+.app-footer-name {
+  font-weight: 600;
+  color: var(--brand-navy);
+}
+.app-footer-version {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-muted);
+}
+button.app-footer-link,
+a.app-footer-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--brand-navy);
+  text-decoration: underline;
+  cursor: pointer;
+  min-height: 0;
+  border-radius: 0;
+}
+button.app-footer-link:hover,
+a.app-footer-link:hover,
+button.app-footer-link:focus,
+a.app-footer-link:focus {
+  color: var(--brand-red);
+  background: none;
+  border: none;
+}
+button.app-footer-link:focus-visible,
+a.app-footer-link:focus-visible {
+  outline: 2px solid var(--brand-navy);
+  outline-offset: 2px;
+}
+@media (min-width: 720px) {
+  .app-footer > * + *::before {
+    content: "·";
+    margin-right: 0.75rem;
+    color: var(--color-muted);
+    pointer-events: none;
+    text-decoration: none;
+  }
+}
+
+/* Sticky footer: on screens whose content is shorter than the viewport the
+   footer sits at the bottom rather than floating mid-page. Scoped to
+   @media screen so the print-only container is unaffected. */
+@media screen {
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  #app-main {
+    flex: 1 0 auto;
+  }
+  .app-bar,
+  .app-footer {
+    flex-shrink: 0;
+  }
+}
+
+body.modal-open { overflow: hidden; }
+
+#util-modal-box {
+  max-width: 32rem;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+/* ===================================================================
+   PRACTICE PLANNER
+   =================================================================== */
+
+/* ---- Practice view layout ---- */
+.practice-view { max-width: 100%; padding: 1rem 1.25rem 2rem; }
+.practice-layout {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 1rem;
+  align-items: start;
+  margin-top: 0.75rem;
+}
+
+/* ---- Panels ---- */
+.practice-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+.practice-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.9rem;
+  background: #f6f3ec;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--color-primary-dark);
+  letter-spacing: 0.01em;
+}
+.practice-panel-head:hover { background: #e5e9f0; }
+.pchevron { font-size: 0.75rem; transition: transform 0.2s; color: var(--color-muted); }
+.practice-panel-head.collapsed .pchevron { transform: rotate(-90deg); }
+.practice-panel-body { padding: 0.75rem 0.9rem; }
+.practice-panel-body.collapsed { display: none; }
+
+/* Budget panel */
+.practice-budget-panel { padding: 0.6rem 0.9rem; }
+.pbudget-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  margin-bottom: 0.35rem;
+}
+.pbudget-track {
+  height: 8px;
+  background: #e2e6ea;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.3rem;
+}
+.pbudget-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s, background 0.3s;
+}
+.pbudget-ok   { background: #1a7a3c; }
+.pbudget-warn { background: #c98a06; }
+.pbudget-over { background: #c0392b; }
+.pbudget-detail {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+/* ---- Form helpers inside practice panel ---- */
+.pfield { margin-bottom: 0.65rem; }
+.pfield:last-child { margin-bottom: 0; }
+.pfield label {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  margin-bottom: 0.25rem;
+}
+.pfield input[type="text"],
+.pfield input[type="date"],
+.pfield input[type="time"],
+.pfield input[type="search"],
+.pfield select,
+.pfield textarea {
+  width: 100%;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background: #fff;
+}
+.pfield textarea { resize: vertical; min-height: 52px; font-size: var(--text-sm); }
+.pfield input:focus, .pfield select:focus, .pfield textarea:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+.pform-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 0.75rem; }
+
+/* ---- Drill search row ---- */
+.pdrill-search-row { display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.5rem; }
+.pdrill-search-wrap {
+  position: relative;
+  flex: 1;
+}
+.pdrill-search-wrap input[type="search"] {
+  width: 100%;
+  padding: 0.35rem 0.55rem 0.35rem 1.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  background: #fff;
+}
+.pdrill-search-wrap input[type="search"]:focus { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+.pdrill-search-ico {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  pointer-events: none;
+  color: var(--color-muted);
+}
+.pdrill-clear-btn {
+  padding: 0.3rem 0.55rem;
+  font-size: var(--text-sm);
+  min-height: 30px;
+  white-space: nowrap;
+}
+
+/* ---- Chips (skill + intensity filter) ---- */
+.pchips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.4rem;
+}
+.pchip {
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-muted);
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+  white-space: nowrap;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+}
+.pchip:hover { background: #f6f3ec; border-color: var(--color-primary); color: var(--color-primary); }
+.pchip.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+.pchip-low.active  { background: #1a7a3c; border-color: #1a7a3c; }
+.pchip-med.active  { background: #b45309; border-color: #b45309; }
+.pchip-high.active { background: #c0392b; border-color: #c0392b; }
+.pchip:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* ---- Drill status ---- */
+.pdrill-status {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  min-height: 1.2em;
+  margin: 0.15rem 0 0.35rem;
+}
+
+/* ---- Drill card scroll area ---- */
+.pdrill-cards-scroll {
+  max-height: 340px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: #fafbfc;
+  margin-bottom: 0.75rem;
+}
+
+/* ---- Individual drill card ---- */
+.pdrill-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+  background: #fafbfc;
+  transition: background 0.1s;
+  cursor: pointer;
+}
+.pdrill-card:last-child { border-bottom: none; }
+.pdrill-card:hover { background: #efeadd; }
+.pdrill-card.in-plan { background: #f0fdf4; border-left: 3px solid #1a7a3c; }
+.pdrill-card-text { flex: 1; min-width: 0; }
+.pdrill-card-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pdrill-card-meta { font-size: var(--text-xs); color: var(--color-muted); margin-top: 1px; }
+.pdrill-card-badges { display: flex; flex-wrap: wrap; gap: 0.2rem; margin-top: 0.15rem; }
+
+/* Intensity badges */
+.pbadge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.pbadge-low  { background: #dcfce7; color: #166534; }
+.pbadge-med  { background: #fef3c7; color: #92400e; }
+.pbadge-high { background: #fee2e2; color: #991b1b; }
+.pbadge-skill { background: #e5e0d4; color: var(--brand-navy); }
+
+/* ---- Add to plan button on drill card ---- */
+.pdrill-add-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, transform 0.1s;
+  padding: 0;
+  min-height: 28px;
+  font-weight: 700;
+}
+.pdrill-add-btn:hover { background: var(--color-primary-dark); transform: scale(1.1); }
+.pdrill-card.in-plan .pdrill-add-btn { background: #1a7a3c; }
+.pdrill-card.in-plan .pdrill-add-btn:hover { background: #155f2f; }
+.pdrill-add-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* ---- No results empty state ---- */
+.pdrill-empty {
+  text-align: center;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  padding: 1.5rem 1rem;
+}
+
+/* ---- Skill plan gallery ---- */
+.pplan-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.6rem;
+}
+.pplan-tab {
+  padding: 0.18rem 0.6rem;
+  border-radius: 12px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-muted);
+  transition: background 0.12s, color 0.12s;
+  min-height: 26px;
+  display: inline-flex;
+  align-items: center;
+}
+.pplan-tab.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+.pplan-tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.pplan-gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+.pplan-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  background: #f8fafc;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.pplan-card:hover { border-color: var(--color-primary); background: #efeadd; }
+.pplan-card:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.pplan-card-label { font-weight: 700; font-size: var(--text-sm); color: var(--color-text); margin-bottom: 0.3rem; }
+.pplan-card-badges { display: flex; flex-wrap: wrap; gap: 0.2rem; margin-bottom: 0.25rem; }
+.pplan-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 0.63rem;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.pplan-badge-skill { background: #e5e0d4; color: var(--brand-navy); }
+.pplan-badge-diff  { background: #fef3c7; color: #92400e; }
+.pplan-badge-age   { background: #d1fae5; color: #065f46; }
+.pplan-badge-dur   { background: #f3e8ff; color: #5b21b6; }
+.pplan-card-meta { font-size: 0.67rem; color: var(--color-muted); }
+
+/* ---- Plan builder action buttons ---- */
+.practice-plan-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-bottom: 0.75rem;
+}
+.btn-sm { padding: 0.25rem 0.65rem; font-size: var(--text-sm); min-height: 30px; }
+
+/* ---- RIGHT: Practice plan panel ---- */
+.practice-right { position: sticky; top: 5rem; }
+.practice-plan-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.practice-plan-header {
+  background: var(--color-primary-dark);
+  color: #fff;
+  padding: 0.75rem 1rem;
+}
+.practice-plan-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.practice-plan-header h3 { margin: 0; font-size: var(--text-md); color: #fff; }
+.practice-plan-hdr-actions { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.practice-plan-hdr-actions button {
+  font-size: var(--text-xs);
+  padding: 0.2rem 0.55rem;
+  min-height: 26px;
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.35);
+  color: #fff;
+}
+.practice-plan-hdr-actions button:hover { background: rgba(255,255,255,0.3); }
+.practice-plan-meta {
+  margin-top: 0.4rem;
+  font-size: var(--text-xs);
+  opacity: 0.85;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+/* ---- Plan items list ---- */
+.practice-plan-items {
+  min-height: 120px;
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+.ppempty {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+.ppempty p { margin: 0.25rem 0; }
+
+/* ---- Plan item row ---- */
+.pplan-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.85rem;
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.1s;
+}
+.pplan-item:last-child { border-bottom: none; }
+.pplan-item:hover { background: #faf8f2; }
+.pplan-item-body { flex: 1; min-width: 0; }
+.pplan-item-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pplan-item-meta { font-size: var(--text-xs); color: var(--color-muted); margin-top: 1px; }
+.pplan-item-controls { display: flex; align-items: center; gap: 0.25rem; flex-shrink: 0; }
+.pplan-item-dur {
+  width: 38px;
+  padding: 0.15rem 0.3rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: var(--text-xs);
+  text-align: center;
+  font-family: inherit;
+  background: #fff;
+}
+.pplan-item-dur:focus { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+.pplan-item-dur-lbl { font-size: var(--text-xs); color: var(--color-muted); }
+.pplan-item-move-btn, .pplan-item-remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.15rem 0.25rem;
+  min-height: 24px;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  border-radius: 3px;
+}
+.pplan-item-move-btn:hover { background: #f6f3ec; color: var(--color-primary); }
+.pplan-item-remove-btn:hover { background: #fde2e1; color: var(--brand-red); }
+.pplan-item-move-btn:focus-visible, .pplan-item-remove-btn:focus-visible {
+  outline: 2px solid var(--color-primary); outline-offset: 1px;
+}
+
+/* ---- Plan footer ---- */
+.practice-plan-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.85rem;
+  border-top: 2px solid var(--color-border);
+  background: #f5f6f8;
+  font-size: var(--text-sm);
+}
+.ppfooter-label { font-weight: 700; color: var(--color-text); }
+#ppfooter-total { font-weight: 700; color: var(--color-primary-dark); font-size: var(--text-md); }
+.ppfooter-count { color: var(--color-muted); font-size: var(--text-xs); margin-left: auto; }
+
+/* ---- Practice plan mode toggle (Sequential vs Stations) ---- */
+.pmode-toggle {
+  display: flex;
+  gap: 1rem;
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--color-border);
+  background: #f9fafb;
+}
+.pmode-toggle-option {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: none;
+}
+.pmode-toggle-option input[type="radio"] { width: 15px; height: 15px; cursor: pointer; }
+
+/* ---- Stations mode ---- */
+.pstations-wrap { padding: 0.6rem 0.85rem; }
+.pstations-wrap.hidden { display: none; }
+.pstations-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+.pstations-controls label { font-weight: 600; font-size: var(--text-sm); }
+#pp-station-count {
+  width: 56px;
+  padding: 0.2rem 0.35rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-family: inherit;
+}
+.pstations-list { display: flex; flex-direction: column; gap: 0.7rem; }
+.pstation-block {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.55rem 0.7rem;
+}
+.pstation-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+.pstation-label { font-weight: 700; font-size: var(--text-sm); color: var(--color-text); }
+.pstation-time-wrap { display: flex; align-items: center; gap: 0.25rem; margin-left: auto; }
+.pstation-time-input {
+  width: 50px;
+  padding: 0.15rem 0.3rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: var(--text-xs);
+  text-align: center;
+  font-family: inherit;
+}
+.pstation-time-lbl { font-size: var(--text-xs); color: var(--color-muted); }
+.pstation-head-btns { display: flex; gap: 0.2rem; }
+.pstation-drill-picker {
+  width: 100%;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: var(--text-sm);
+  margin-bottom: 0.4rem;
+}
+.pstation-drill-list { display: flex; flex-direction: column; gap: 0.2rem; }
+.pstation-empty { padding: 0.3rem 0; }
+.pstation-drill-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 4px;
+  background: #faf8f2;
+}
+.pstation-drill-name { flex: 1; font-size: var(--text-sm); font-weight: 600; color: var(--color-text); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pstation-drill-meta { font-size: var(--text-xs); color: var(--color-muted); flex-shrink: 0; }
+
+/* ---- Toast notification ---- */
+.pp-toast {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(1rem);
+  background: #1f2630;
+  color: #fff;
+  padding: 0.55rem 1.1rem;
+  border-radius: 20px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.pp-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---- Drill detail modal ---- */
+.drill-detail-box {
+  max-width: 640px;
+  width: 96%;
+  max-height: 88vh;
+  overflow-y: auto;
+}
+.drill-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.drill-detail-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+  color: var(--color-text);
+}
+.drill-detail-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.drill-detail-close {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--color-muted);
+  padding: 0;
+  min-height: auto;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.drill-detail-close:hover { color: var(--color-text); background: none; border: none; }
+.drill-detail-section { margin: 0.85rem 0; }
+.drill-detail-section-title {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-primary);
+  margin-bottom: 0.35rem;
+}
+.drill-detail-section p, .drill-detail-section ul, .drill-detail-section ol {
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+.drill-detail-section ul, .drill-detail-section ol { padding-left: 1.25rem; }
+.drill-detail-section li { margin-bottom: 0.25rem; }
+.drill-detail-cue {
+  font-style: italic;
+  color: var(--color-muted);
+  border-left: 3px solid #c9b8a8;
+  padding-left: 0.65rem;
+  font-size: var(--text-base);
+}
+.drill-detail-equipment {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.drill-detail-equip-item {
+  background: #f6f3ec;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.15rem 0.55rem;
+  font-size: var(--text-xs);
+  color: var(--color-text);
+}
+.drill-detail-footer {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---- Saved plans modal list ---- */
+.saved-plan-list {
+  max-height: 260px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  margin-bottom: 0.75rem;
+}
+.saved-plan-item {
+  padding: 0.6rem 0.85rem;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.saved-plan-item:last-child { border-bottom: none; }
+.saved-plan-name { font-weight: 600; font-size: var(--text-sm); }
+.saved-plan-meta { font-size: var(--text-xs); color: var(--color-muted); }
+
+/* ---- Practice print root ---- */
+#practice-print-root {
+  display: none;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 960px) {
+  .practice-layout { grid-template-columns: 1fr; }
+  .practice-right { position: static; }
+  .practice-plan-items { max-height: 400px; }
+  .pplan-gallery { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .practice-layout { gap: 0.5rem; }
+  .pform-two-col { grid-template-columns: 1fr; }
+}
+
+/* ===================================================================
+   PRINT
+   (This app only ever prints the practice plan — there is no other
+   print path to scope around, unlike the combined lineup+practice app
+   this was split from.)
+   =================================================================== */
+@media print {
+  body * { visibility: hidden; }
+  .no-print, .app-bar, #modal-overlay, #drill-detail-overlay { display: none !important; }
+  #app-main, header, nav { display: none !important; }
+
+  #practice-print-root,
+  #practice-print-root * { visibility: visible !important; }
+  #practice-print-root {
+    display: block !important;
+    position: absolute;
+    left: 0; top: 0; width: 100%;
+    background: #fff; color: #000;
+  }
+  #practice-print-root .pp-print-header {
+    border-bottom: 2px solid #000;
+    padding-bottom: 6pt;
+    margin-bottom: 10pt;
+  }
+  #practice-print-root .pp-print-header h2 { font-size: 14pt; margin: 0 0 3pt; border: none; padding: 0; }
+  #practice-print-root .pp-print-meta { font-size: 9pt; color: #555; margin: 0; }
+  #practice-print-root .pp-print-section-title {
+    font-size: 8pt; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--brand-navy); margin: 10pt 0 4pt; border-bottom: 1px solid #ccc;
+  }
+  #practice-print-root table { border-collapse: collapse; width: 100%; font-size: 9pt; }
+  #practice-print-root th { background: #eee !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #practice-print-root th, #practice-print-root td { border: 1px solid #999; padding: 3pt 5pt; }
+  #practice-print-root .pp-print-drill-block { margin-bottom: 8pt; page-break-inside: avoid; }
+  #practice-print-root .pp-print-drill-name { font-weight: 700; font-size: 10pt; margin-bottom: 2pt; }
+  #practice-print-root .pp-print-drill-detail { font-size: 8pt; color: #333; margin-bottom: 2pt; }
+  #practice-print-root .pp-print-cue { font-style: italic; color: #555; font-size: 8pt; }
+  #practice-print-root .pp-print-notes { font-size: 9pt; white-space: pre-wrap; border: 1px solid #ccc; padding: 5pt; margin-top: 8pt; }
+}
+
+/* ===================================================================
+   Modal utility, feedback, what's new, changelog
+   =================================================================== */
+
+.feedback-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.star-rating {
+  display: flex;
+  flex-direction: row;
+  gap: 0.15rem;
+}
+button.star-btn {
+  background: none;
+  border: none;
+  padding: 0.1rem 0.15rem;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #cfc9ba;
+  transition: color 0.15s ease;
+  min-height: 0;
+  border-radius: 0;
+}
+button.star-btn.star-on { color: #e8a317; }
+button.star-btn:hover {
+  color: #e8a317;
+  background: none;
+  border: none;
+}
+button.star-btn:focus-visible {
+  outline: 2px solid var(--brand-navy);
+  outline-offset: 2px;
+}
+.star-rating-label {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.feedback-intro {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  margin: 0 0 1rem;
+}
+.feedback-field { margin-bottom: 0.9rem; }
+.feedback-field label {
+  display: block;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  margin-bottom: 0.25rem;
+}
+#feedback-category,
+#feedback-details {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+#feedback-details {
+  resize: vertical;
+  min-height: 6.5rem;
+  font: inherit;
+}
+.feedback-counter {
+  display: block;
+  text-align: right;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  margin-top: 0.2rem;
+}
+.feedback-error {
+  color: var(--brand-red);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+}
+.feedback-confirm,
+.feedback-confirm-note {
+  margin: 0 0 0.7rem;
+  line-height: 1.5;
+}
+.feedback-truncated-note {
+  margin: 0 0 0.7rem;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+.feedback-address-line { margin: 0 0 0.7rem; }
+.feedback-email,
+code.feedback-email {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--text-sm);
+  background: rgba(6, 36, 72, 0.06);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  user-select: all;
+}
+.feedback-fallback-text {
+  width: 100%;
+  min-height: 8rem;
+  font-size: var(--text-xs);
+  margin-top: 0.6rem;
+}
+
+.whatsnew-subtitle {
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+  color: var(--brand-navy);
+}
+.whatsnew-list {
+  margin: 0 0 1rem;
+  padding-left: 1.3rem;
+}
+.whatsnew-list li { margin-bottom: 0.4rem; }
+.whatsnew-history-link {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+.update-lead {
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+.update-reassure {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  margin: 0 0 0.5rem;
+}
+.update-status {
+  margin: 0;
+  font-weight: 600;
+  color: var(--brand-navy);
+}
+
+.changelog-page {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+.changelog-intro,
+.changelog-current {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+.changelog-back {
+  color: var(--brand-navy);
+  text-decoration: none;
+}
+.changelog-back:hover { text-decoration: underline; }
+.changelog-entry {
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(6, 36, 72, 0.12);
+}
+.changelog-entry:last-child { border-bottom: none; }
+h2.changelog-version {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: var(--text-xl);
+  color: var(--brand-navy);
+  border-bottom: none;
+  padding-bottom: 0;
+}
+.changelog-badge {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+.changelog-badge-major { background: var(--brand-red); color: #fff; }
+.changelog-badge-minor { background: var(--brand-navy); color: #fff; }
+.changelog-date {
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--color-muted);
+  margin-left: auto;
+}
+.changelog-title {
+  font-weight: 600;
+  margin: 0.3rem 0 0.5rem;
+}
+.changelog-highlights { padding-left: 1.3rem; }
+.changelog-highlights li { margin-bottom: 0.35rem; }
+
+@media (max-width: 560px) {
+  .changelog-date { margin-left: 0; }
+  .app-footer {
+    gap: 0.5rem 0.75rem;
+    padding: 0.85rem 0.75rem 1.1rem;
+    text-align: center;
+  }
+}

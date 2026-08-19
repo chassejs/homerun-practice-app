@@ -1,0 +1,16 @@
+{
+  "name": "homerun-practice-app",
+  "version": "1.0.0",
+  "description": "Homerun Practice — baseball practice plan builder for Homerun Baseball Ottawa, split out of the Homerun Lineup app.",
+  "private": true,
+  "scripts": {
+    "sync:drills": "node scripts/sync-drills.mjs",
+    "prebuild": "node scripts/sync-drills.mjs",
+    "build": "echo 'Static build complete — no bundler needed. Files served from root.' && exit 0",
+    "start": "npx serve . --listen 3000",
+    "test": "node tests/versionCompat.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

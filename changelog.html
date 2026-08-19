@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Version History — Homerun Practice</title>
+<meta name="theme-color" content="#062448">
+<link rel="icon" type="image/png" sizes="32x32" href="brand/icon-32.png">
+<link rel="apple-touch-icon" href="brand/icon-180.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="app-bar no-print">
+  <img src="brand/crest.png" alt="Homerun Baseball Ottawa" class="app-logo">
+  <div class="app-bar-title">
+    <h1>Version History</h1>
+    <span class="app-bar-sub">Homerun Practice</span>
+  </div>
+</header>
+
+<main class="changelog-page">
+  <p><a class="changelog-back" href="index.html">← Back to the app</a></p>
+  <p class="changelog-intro">This list records every released version of Homerun Practice, newest first. A minor update adds 0.1; a major update adds 1.0.</p>
+  <p class="changelog-current">You are reading the history for Homerun Practice v<span id="changelog-current-version"></span>.</p>
+  <div id="changelog-list"></div>
+  <p><a class="changelog-back" href="index.html">← Back to the app</a></p>
+</main>
+
+<script src="version.js"></script>
+<script src="changelog.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var versionEl = document.getElementById('changelog-current-version');
+  if (versionEl && window.HRP_VERSION && window.HRP_VERSION.APP_VERSION) {
+    versionEl.textContent = window.HRP_VERSION.APP_VERSION;
+  }
+
+  var list = document.getElementById('changelog-list');
+  if (!list) return;
+
+  var entries = window.HRP_CHANGELOG;
+  if (!entries || !entries.length) {
+    var missing = document.createElement('p');
+    missing.textContent = 'Version history is unavailable.';
+    list.appendChild(missing);
+    return;
+  }
+
+  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  function formatDate(iso) {
+    var parts = String(iso || '').split('-');
+    if (parts.length < 3) return iso || '';
+    var year = parts[0];
+    var month = parseInt(parts[1], 10);
+    var day = parseInt(parts[2], 10);
+    if (!month || !day || month < 1 || month > 12) return iso || '';
+    return day + ' ' + months[month - 1] + ' ' + year;
+  }
+
+  var i, j;
+  for (i = 0; i < entries.length; i++) {
+    var entry = entries[i];
+    var section = document.createElement('section');
+    section.className = 'changelog-entry';
+
+    var h2 = document.createElement('h2');
+    h2.className = 'changelog-version';
+    h2.appendChild(document.createTextNode('v' + entry.version + ' '));
+
+    var isMajor = entry.type === 'major';
+    var badge = document.createElement('span');
+    badge.className = 'changelog-badge ' + (isMajor ? 'changelog-badge-major' : 'changelog-badge-minor');
+    badge.textContent = isMajor ? 'Major update' : 'Minor update';
+    h2.appendChild(badge);
+
+    var dateEl = document.createElement('span');
+    dateEl.className = 'changelog-date';
+    dateEl.textContent = formatDate(entry.date);
+    h2.appendChild(dateEl);
+
+    section.appendChild(h2);
+
+    var titleP = document.createElement('p');
+    titleP.className = 'changelog-title';
+    titleP.textContent = entry.title || '';
+    section.appendChild(titleP);
+
+    var ul = document.createElement('ul');
+    ul.className = 'changelog-highlights';
+    var highlights = entry.highlights || [];
+    for (j = 0; j < highlights.length; j++) {
+      var li = document.createElement('li');
+      li.textContent = highlights[j];
+      ul.appendChild(li);
+    }
+    section.appendChild(ul);
+    list.appendChild(section);
+  }
+}());
+</script>
+</body>
+</html>
