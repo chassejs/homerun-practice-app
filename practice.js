@@ -95,7 +95,7 @@
 
     // ── Constants ──────────────────────────────────────────────────────────
     const SKILL_ORDER = [
-      'hitting', 'throwing', 'infield', 'outfield', 'catching',
+      'full-practice', 'hitting', 'throwing', 'infield', 'outfield', 'catching',
       'pitching', 'baserunning', 'bunting', 'situational', 'conditioning'
     ];
 
@@ -600,6 +600,10 @@
     function loadPlanFromTemplate(plan) {
       if (!plan || !Array.isArray(plan.drills)) return;
       pushUndo();
+      if (plan.totalMin) {
+        planMeta.duration = plan.totalMin;
+        syncMetaInputs();
+      }
       planItems = plan.drills
         .map(function (slug) {
           const drill = getDrillById(slug);
@@ -1152,7 +1156,11 @@
       return b;
     }
 
-    function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+    function capitalize(s) {
+      return s ? s.split('-').map(function (w) {
+        return w ? w.charAt(0).toUpperCase() + w.slice(1) : w;
+      }).join(' ') : s;
+    }
 
     // ── Save / Load ────────────────────────────────────────────────────────
 
@@ -1668,7 +1676,24 @@
 
     function setVal(id, val) {
       const el = document.getElementById(id);
-      if (el) el.value = val || '';
+      if (!el) return;
+      if (el.tagName === 'SELECT') {
+        const strVal = String(val || '');
+        const hasMatch = Array.from(el.options).some(function (o) { return o.value === strVal; });
+        if (!hasMatch && strVal) {
+          let custom = el.querySelector('option[data-custom]');
+          if (!custom) {
+            custom = document.createElement('option');
+            custom.setAttribute('data-custom', '');
+            el.appendChild(custom);
+          }
+          custom.value = strVal;
+          custom.textContent = strVal + ' min';
+        }
+        el.value = strVal;
+        return;
+      }
+      el.value = val || '';
     }
 
     function bindMetaInputs() {
