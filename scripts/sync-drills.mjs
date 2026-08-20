@@ -184,12 +184,68 @@ function extractCommonFaults(body) {
   return faults;
 }
 
+function extractProgressionNotes(body) {
+  // Format 1: inline bold "**Progressions:** ..."
+  const m = body.match(/\*\*Progressions:\*\*\s*(.+?)(?=\n\n|\n\*\*|\n#|$)/s);
+  if (m) return m[1].replace(/\n/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 400);
+
+  // Format 2: "## Progressions" heading section — first prose paragraph(s).
+  const section = headingSection(body, /^progressions$/i);
+  if (section.length) {
+    const para = [];
+    for (const raw of section) {
+      const line = raw.trim();
+      if (!line) { if (para.length) break; else continue; }
+      if (line.startsWith('>')) continue;
+      if (line.startsWith('|')) continue;
+      if (line.startsWith('-') || line.startsWith('*')) { para.push(line.replace(/^[-*]\s*/, '')); continue; }
+      para.push(line);
+    }
+    if (para.length) return para.join(' ').replace(/\s+/g, ' ').trim().slice(0, 400);
+  }
+  return '';
+}
+
+function extractAgeNotes(body) {
+  // Format 1: inline bold "**Age/division notes:** ..."
+  const m = body.match(/\*\*Age\/division notes:\*\*\s*(.+?)(?=\n\n|\n\*\*|\n#|$)/s);
+  if (m) return m[1].replace(/\n/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 400);
+
+  // Format 2: heading starting with "Age" (e.g. "## Age/Division Notes").
+  const section = headingSection(body, /^age/i);
+  if (section.length) {
+    const para = [];
+    for (const raw of section) {
+      const line = raw.trim();
+      if (!line) { if (para.length) break; else continue; }
+      if (line.startsWith('>')) continue;
+      if (line.startsWith('|')) continue;
+      if (line.startsWith('-') || line.startsWith('*')) { para.push(line.replace(/^[-*]\s*/, '')); continue; }
+      para.push(line);
+    }
+    if (para.length) return para.join(' ').replace(/\s+/g, ' ').trim().slice(0, 400);
+  }
+  return '';
+}
+
+// First-match-wins fallback when a drill has no explicit `stage:` frontmatter.
+function stageFallback(ageMin, intensity) {
+  if (ageMin <= 8) return 'introductory';
+  if ((ageMin === 9 || ageMin === 10) && (intensity === 'low' || intensity === 'medium')) return 'beginner';
+  if ((ageMin === 9 || ageMin === 10) && intensity === 'high') return 'intermediate';
+  if (ageMin === 11 || ageMin === 12) return 'intermediate';
+  if (ageMin >= 13) return 'advanced';
+  return 'beginner';
+}
+
 // ── Drill loader ───────────────────────────────────────────────────────────
 const REQUIRED_FIELDS = ['title', 'skill', 'age_min', 'age_max', 'equipment', 'duration_min', 'reps', 'intensity'];
 
 function loadDrills() {
   const errors = [];
   const drills = [];
+  let explicit = 0;
+  let fallback = 0;
 
   const files = readdirSync(DRILLS_DIR)
     .filter(f => f.endsWith('.md'))
@@ -215,6 +271,15 @@ function loadDrills() {
     const tags = Array.isArray(fm.tags) ? fm.tags : (fm.tags ? [fm.tags] : []);
     const pathway = Array.isArray(fm.pathway) ? fm.pathway : (fm.pathway ? [fm.pathway] : []);
 
+    let stage;
+    if (fm.stage) {
+      stage = String(fm.stage);
+      explicit += 1;
+    } else {
+      stage = stageFallback(Number(fm.age_min), String(fm.intensity));
+      fallback += 1;
+    }
+
     drills.push({
       id:             stem,                                           // slug is stable id
       title:          String(fm.title),
@@ -234,6 +299,10 @@ function loadDrills() {
       tags:           tags,
       pathway:        pathway,
       source:         `wiki/drills/${file}`,                         // KB-relative path
+      stage:            stage,
+      prerequisites:    Array.isArray(fm.prerequisites) ? fm.prerequisites : (fm.prerequisites ? [fm.prerequisites] : []),
+      progressionNotes: extractProgressionNotes(body),
+      ageNotes:         extractAgeNotes(body),
     });
   }
 
@@ -244,7 +313,7 @@ function loadDrills() {
 
   // Stable sort by id so output is deterministic regardless of filesystem order
   drills.sort((a, b) => a.id.localeCompare(b.id));
-  return drills;
+  return { drills, explicit, fallback };
 }
 
 // ── Standard plans loader ──────────────────────────────────────────────────
@@ -267,7 +336,7 @@ function loadStandardPlans(drillIndex) {
     if (stripped.startsWith('PLAN:')) {
       if (current) finalizePlan(current, drillIndex, plans);
       current = { id: stripped.slice(5).trim(), label: '', skill: '', age: '', drills: [],
-        notes: '', skillCategory: '', difficultyRange: '', ageRange: '', totalDuration: '' };
+        notes: '', skillCategory: '', difficultyRange: '', ageRange: '', totalDuration: '', stage: '' };
     } else if (current) {
       const fieldMap = {
         'label:':            'label',
@@ -278,6 +347,7 @@ function loadStandardPlans(drillIndex) {
         'difficulty_range:': 'difficultyRange',
         'age_range:':        'ageRange',
         'total_duration:':   'totalDuration',
+        'stage:':            'stage',
       };
       let matched = false;
       for (const [prefix, prop] of Object.entries(fieldMap)) {
@@ -302,6 +372,14 @@ function finalizePlan(p, drillIndex, plans) {
     else console.warn(`  Warning: Plan '${p.id}': drill '${slug}' not in KB — skipped`);
   }
   const totalMin = resolved.reduce((s, slug) => s + (drillIndex[slug]?.durationMinutes || 0), 0);
+  let stage = p.stage;
+  if (!stage) {
+    const diff = p.difficultyRange;
+    if (diff === 'Beginner' || diff === 'Beginner–Intermediate') stage = 'beginner';
+    else if (diff === 'Intermediate' || diff === 'Intermediate–Advanced') stage = 'intermediate';
+    else if (diff === 'Advanced') stage = 'advanced';
+    else stage = 'beginner'; // default when difficultyRange is empty or unrecognised
+  }
   plans.push({
     id:              p.id,
     label:           p.label,
@@ -314,6 +392,7 @@ function finalizePlan(p, drillIndex, plans) {
     drills:          resolved,
     notes:           p.notes,
     totalMin,
+    stage,
   });
 }
 
@@ -352,8 +431,10 @@ window.DRILLS_DATA = ${sortedStringify(payload)};
 
 // ── Main ───────────────────────────────────────────────────────────────────
 console.log(`Loading drills from ${DRILLS_DIR} …`);
-const drills = loadDrills();
+const loaded = loadDrills();
+const drills = loaded.drills;
 console.log(`  ${drills.length} drills loaded from KB`);
+console.log(`Stage tagging: ${loaded.explicit} explicit, ${loaded.fallback} computed via fallback (of ${drills.length} drills)`);
 
 const drillIndex = Object.fromEntries(drills.map(d => [d.id, d]));
 

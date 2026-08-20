@@ -139,7 +139,7 @@
               <button type="button" class="pchip pchip-med" data-intensity="medium">Medium</button>
               <button type="button" class="pchip pchip-high" data-intensity="high">High</button>
             </div>
-            <!-- Age filter -->
+            <!-- Age + Level filters -->
             <div class="pform-two-col" style="margin-top:0.5rem">
               <div class="pfield">
                 <label for="pp-age-filter">Age Range</label>
@@ -149,7 +149,17 @@
                   <option value="8-10">8–10U (Minor)</option>
                   <option value="10-12">10–12U (Major)</option>
                   <option value="12-14">12–14U (Intermediate)</option>
-                  <option value="14-18">14U+ (Junior/Senior)</option>
+                  <option value="12-15">12–15U (Advanced)</option>
+                </select>
+              </div>
+              <div class="pfield">
+                <label for="pdrill-level-filter">Level</label>
+                <select id="pdrill-level-filter">
+                  <option value="">All levels</option>
+                  <option value="introductory">Introductory</option>
+                  <option value="beginner">Beginner</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="advanced">Advanced</option>
                 </select>
               </div>
               <div class="pfield" style="display:flex;align-items:flex-end;padding-bottom:0.1rem">
@@ -176,6 +186,17 @@
           <div class="practice-panel-body" id="psec-plans">
             <div class="pplan-tabs" id="pplan-skill-tabs" role="tablist" aria-label="Filter plans by skill"></div>
             <div class="pplan-gallery" id="pplan-gallery" role="list"></div>
+          </div>
+        </div>
+
+        <!-- SKILL-PROGRESSION ROADMAP -->
+        <div class="practice-panel">
+          <div class="practice-panel-head" data-psection="roadmap">
+            <span>Roadmap</span>
+            <span class="pchevron">&#9660;</span>
+          </div>
+          <div class="practice-panel-body" id="psec-roadmap">
+            <div id="proadmap-container"></div>
           </div>
         </div>
 
