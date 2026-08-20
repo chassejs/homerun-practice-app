@@ -106,8 +106,16 @@
     let filterSkill     = '';    // '' = all
     let filterIntensity = '';    // '' = all
     let filterAge       = '';    // '' = all
+    let filterLevel     = '';    // '' = all
     let showAllAges     = false;
     let searchQuery     = '';
+
+    const STAGE_LABELS = {
+      introductory: 'Introductory',
+      beginner:     'Beginner',
+      intermediate: 'Intermediate',
+      advanced:     'Advanced'
+    };
 
     // Practice plan: array of { drillId, durationMinutes (user-editable) }
     let planItems  = [];
@@ -160,6 +168,8 @@
         if (filterSkill && d.category !== filterSkill) return false;
         // Intensity filter
         if (filterIntensity && d.intensity !== filterIntensity) return false;
+        // Level / stage filter
+        if (filterLevel && d.stage !== filterLevel) return false;
         // Age filter
         if (!showAllAges && filterAge) {
           const parts = filterAge.split('-');
@@ -176,7 +186,8 @@
           const hay = [
             d.title, d.category, d.purpose || '', d.skill || '',
             (d.tags || []).join(' '), (d.equipment || []).join(' '),
-            d.setup || '', d.coachingCues || '', (d.commonFaults || []).join(' ')
+            d.setup || '', d.coachingCues || '', (d.commonFaults || []).join(' '),
+            d.progressionNotes || '', d.ageNotes || ''
           ].join(' ').toLowerCase();
           if (hay.indexOf(q) === -1) return false;
         }
@@ -276,6 +287,9 @@
       badges.className = 'pdrill-card-badges';
       badges.appendChild(makeBadge('pbadge-skill', drill.category));
       badges.appendChild(makeBadge('pbadge-' + intensityClass(drill.intensity), drill.intensity));
+      if (drill.stage) {
+        badges.appendChild(makeBadge('pbadge-stage-' + drill.stage, STAGE_LABELS[drill.stage] || drill.stage));
+      }
       text.appendChild(badges);
 
       card.appendChild(text);
@@ -347,6 +361,9 @@
       bdgs.className = 'drill-detail-badges';
       bdgs.appendChild(makeBadge('pbadge-skill', drill.category));
       bdgs.appendChild(makeBadge('pbadge-' + intensityClass(drill.intensity), drill.intensity + ' intensity'));
+      if (drill.stage) {
+        bdgs.appendChild(makeBadge('pbadge-stage-' + drill.stage, STAGE_LABELS[drill.stage] || drill.stage));
+      }
       bdgs.appendChild(makeBadge('pbadge-low', drill.ageMin + '–' + drill.ageMax + 'U'));
       bdgs.appendChild(makeBadge('pbadge-med', drill.durationMinutes + ' min'));
       titleGroup.appendChild(bdgs);
@@ -460,6 +477,42 @@
         sec.appendChild(t);
         sec.appendChild(eq);
         box.appendChild(sec);
+      }
+
+      // How to progress
+      if (drill.progressionNotes) {
+        box.appendChild(detailSection('How to progress', drill.progressionNotes));
+      }
+
+      // Prerequisites (clickable chips that open that drill's detail)
+      const prereqs = drill.prerequisites || [];
+      if (prereqs.length) {
+        const chips = [];
+        prereqs.forEach(function (slug) {
+          const pre = getDrillById(slug);
+          if (pre) chips.push(pre);
+        });
+        if (chips.length) {
+          const sec = document.createElement('div');
+          sec.className = 'drill-detail-section';
+          const t = document.createElement('div');
+          t.className = 'drill-detail-section-title';
+          t.textContent = 'Prerequisites';
+          const row = document.createElement('div');
+          row.className = 'drill-detail-equipment';
+          chips.forEach(function (pre) {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'drill-detail-prereq-chip';
+            chip.textContent = pre.title;
+            chip.setAttribute('aria-label', 'Open drill: ' + pre.title);
+            chip.addEventListener('click', function () { openDrillDetail(pre.id); });
+            row.appendChild(chip);
+          });
+          sec.appendChild(t);
+          sec.appendChild(row);
+          box.appendChild(sec);
+        }
       }
 
       // Footer: source + add-to-plan button
@@ -1162,6 +1215,95 @@
       }).join(' ') : s;
     }
 
+    // ── Skill-progression roadmap ──────────────────────────────────────────
+
+    const ROADMAP_STAGES = [
+      { id: 'introductory', label: 'Introductory', age: '5–8U' },
+      { id: 'beginner',     label: 'Beginner',     age: '8–10U' },
+      { id: 'intermediate', label: 'Intermediate', age: '10–12U' },
+      { id: 'advanced',     label: 'Advanced',     age: '12–15U' }
+    ];
+
+    function renderRoadmap() {
+      const container = document.getElementById('proadmap-container');
+      if (!container) return;
+
+      const skills = SKILL_ORDER.filter(function (sk) { return sk !== 'full-practice'; });
+
+      container.innerHTML = '';
+      skills.forEach(function (skill) {
+        const row = document.createElement('div');
+        row.className = 'proadmap-skill';
+
+        const heading = document.createElement('h4');
+        heading.className = 'proadmap-skill-title';
+        heading.textContent = capitalize(skill);
+        row.appendChild(heading);
+
+        const stagesEl = document.createElement('div');
+        stagesEl.className = 'proadmap-stages';
+
+        ROADMAP_STAGES.forEach(function (stage) {
+          const cell = document.createElement('div');
+          cell.className = 'proadmap-stage';
+
+          const head = document.createElement('div');
+          head.className = 'proadmap-stage-head';
+          const name = document.createElement('span');
+          name.className = 'proadmap-stage-name';
+          name.textContent = stage.label;
+          const age = document.createElement('span');
+          age.className = 'proadmap-stage-age';
+          age.textContent = stage.age;
+          head.appendChild(name);
+          head.appendChild(age);
+          cell.appendChild(head);
+
+          const matches = ALL_PLANS.filter(function (p) {
+            return p.skill === skill && p.stage === stage.id;
+          });
+
+          if (matches.length) {
+            matches.forEach(function (plan) {
+              const card = document.createElement('button');
+              card.type = 'button';
+              card.className = 'pplan-card';
+              card.setAttribute('aria-label', 'Load plan: ' + plan.label);
+
+              const label = document.createElement('div');
+              label.className = 'pplan-card-label';
+              label.textContent = plan.label;
+              card.appendChild(label);
+
+              const badges = document.createElement('div');
+              badges.className = 'pplan-card-badges';
+              if (plan.ageRange || plan.age) {
+                badges.appendChild(makePlanBadge('pplan-badge-age', plan.ageRange || plan.age));
+              }
+              badges.appendChild(makePlanBadge('pplan-badge-skill', (plan.drills ? plan.drills.length : 0) + ' drills'));
+              if (plan.totalDuration || plan.totalMin) {
+                badges.appendChild(makePlanBadge('pplan-badge-dur', plan.totalDuration || (plan.totalMin + ' min')));
+              }
+              card.appendChild(badges);
+
+              card.addEventListener('click', function () { loadPlanFromTemplate(plan); });
+              cell.appendChild(card);
+            });
+          } else {
+            const empty = document.createElement('div');
+            empty.className = 'proadmap-card-empty';
+            empty.textContent = 'Coming soon';
+            cell.appendChild(empty);
+          }
+
+          stagesEl.appendChild(cell);
+        });
+
+        row.appendChild(stagesEl);
+        container.appendChild(row);
+      });
+    }
+
     // ── Save / Load ────────────────────────────────────────────────────────
 
     function serializePlan() {
@@ -1799,6 +1941,14 @@
       });
     }
 
+    function bindLevelFilter() {
+      const sel = document.getElementById('pdrill-level-filter');
+      if (sel) sel.addEventListener('change', function () {
+        filterLevel = sel.value;
+        renderDrillCards();
+      });
+    }
+
     // ── Toast ──────────────────────────────────────────────────────────────
 
     let toastTimer;
@@ -1852,6 +2002,7 @@
     // Main init
     bindSearch();
     bindAgeFilter();
+    bindLevelFilter();
     bindChips('pskill-chips', 'data-skill', function (val) {
       filterSkill = val;
       renderDrillCards();
@@ -1872,6 +2023,7 @@
     renderPlanItems();
     updateBudget();
     renderPlanGallery('all');
+    renderRoadmap();
     updateUndoBtn();
   }
 })();
