@@ -10,6 +10,15 @@ window.HRP_CHANGELOG = (function () {
 
   return [
     {
+      version: '1.2',
+      date: '2026-08-21',
+      type: 'minor',
+      title: 'Fix mobile layout overflow',
+      highlights: [
+        'Fixed a horizontal scrolling/overflow bug on narrow phone screens (≤375px) that cut off the right edge of the Practice Planner.'
+      ]
+    },
+    {
       version: '1.1',
       date: '2026-08-20',
       type: 'minor',

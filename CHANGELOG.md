@@ -4,6 +4,10 @@
 
 Numbering scheme: a minor update adds 0.1; a major update adds 1.0 and resets the minor to 0.
 
+## v1.2 — 2026-08-21 (minor) — Fix mobile layout overflow
+
+- Fixed a horizontal scrolling/overflow bug on narrow phone screens (≤375px) that cut off the right edge of the Practice Planner.
+
 ## v1.1 — 2026-08-20 (minor) — Drill library Roadmap + Level filter, new app icon
 
 - New Roadmap view in the drill library — browse drills organized by skill progression.
