@@ -1,0 +1,23 @@
+name: Version check
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  version-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Run test suite (includes version-consistency checks)
+        run: npm test
+
+      - name: Require a version bump when app source changes
+        run: node scripts/check-version-bump.mjs origin/${{ github.base_ref }}

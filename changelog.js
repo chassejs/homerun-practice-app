@@ -10,6 +10,17 @@ window.HRP_CHANGELOG = (function () {
 
   return [
     {
+      version: '1.1',
+      date: '2026-08-20',
+      type: 'minor',
+      title: 'Drill library Roadmap + Level filter, new app icon',
+      highlights: [
+        'New Roadmap view in the drill library — browse drills organized by skill progression.',
+        'New Level filter to narrow the drill library to a specific skill level.',
+        'Refreshed app icon.'
+      ]
+    },
+    {
       version: '1.0',
       date: '2026-08-19',
       type: 'major',

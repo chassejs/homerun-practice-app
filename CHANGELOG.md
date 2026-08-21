@@ -4,6 +4,12 @@
 
 Numbering scheme: a minor update adds 0.1; a major update adds 1.0 and resets the minor to 0.
 
+## v1.1 — 2026-08-20 (minor) — Drill library Roadmap + Level filter, new app icon
+
+- New Roadmap view in the drill library — browse drills organized by skill progression.
+- New Level filter to narrow the drill library to a specific skill level.
+- Refreshed app icon.
+
 ## v1.0 — 2026-08-19 (major) — First release — split from Homerun Lineup
 
 - The Practice Planner is now its own app, split out of Homerun Lineup v2.2 so it can grow independently.

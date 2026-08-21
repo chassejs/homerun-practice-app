@@ -14,7 +14,7 @@ window.HRP_VERSION = (function () {
   'use strict';
 
   // Human-facing release label shown in the UI and embedded in every backup.
-  var APP_VERSION = '1.0';
+  var APP_VERSION = '1.1';
 
   // Governs backup/restore compatibility. Incremented independently of
   // APP_VERSION when the exported JSON payload shape changes.
