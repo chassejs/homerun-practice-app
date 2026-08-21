@@ -285,6 +285,13 @@ body.modal-open { overflow: hidden; }
   align-items: start;
   margin-top: 0.75rem;
 }
+/* Grid items default to min-width:auto (their content's min-content size),
+   which blocks the mobile breakpoint's `1fr` column from ever shrinking
+   below whatever its widest descendant demands — the actual cause of the
+   horizontal overflow at narrow widths, not any single element's text.
+   Harmless at desktop: the 380px column above is a fixed track length,
+   which isn't clamped by an item's content-based minimum the way `1fr` is. */
+.practice-left { min-width: 0; }
 
 /* ---- Panels ---- */
 .practice-panel {
