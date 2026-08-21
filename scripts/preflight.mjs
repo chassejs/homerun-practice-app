@@ -103,12 +103,18 @@ if (has('sw.js')) {
   const cacheName = (sw.match(/const CACHE\s*=\s*['"]([^'"]+)['"]/) || [])[1];
   if (!cacheName) {
     warn('sw.js has no recognisable CACHE constant — cannot check invalidation');
-  } else if (buildId) {
+  } else if (buildId && cacheName.includes(buildId)) {
     // A cache-first worker whose name never changes serves a stale build forever.
-    if (cacheName.includes(buildId)) ok('cache name carries BUILD_ID (' + cacheName + ')');
-    else bad('cache name "' + cacheName + '" does not carry BUILD_ID "' + buildId + '" — this deploy would NOT invalidate');
+    ok('cache name carries BUILD_ID (' + cacheName + ')');
+  } else if (appVersion && cacheName.includes(appVersion)) {
+    // No per-build id here, but the cache is at least tied to the release
+    // version — good enough as long as every release bumps that version
+    // (which these repos' own docs/VERSIONING.md already requires).
+    ok('cache name carries APP_VERSION (' + cacheName + ')');
+  } else if (buildId || appVersion) {
+    bad('cache name "' + cacheName + '" is tied to neither BUILD_ID nor APP_VERSION — a deploy would NOT invalidate for returning visitors');
   } else {
-    warn('cache name is "' + cacheName + '" and there is no BUILD_ID to tie it to — a deploy may not invalidate for returning visitors');
+    warn('cache name is "' + cacheName + '" and there is no version identity to tie it to — cannot verify invalidation');
   }
   const block = (sw.match(/(?:const|var)\s+ASSETS\s*=\s*\[([\s\S]*?)\]/) || [])[1];
   if (block) {
