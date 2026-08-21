@@ -486,7 +486,6 @@ body.modal-open { overflow: hidden; }
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   background: #fafbfc;
-  margin-bottom: 0.75rem;
 }
 
 /* ---- Individual drill card ---- */

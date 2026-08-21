@@ -713,7 +713,7 @@
         empty.className = 'ppempty';
         empty.id = 'ppempty';
         empty.innerHTML = '<p>No drills added yet.</p>' +
-          '<p class="hint">Search the Drill Library on the left and click <strong>+ Add</strong> to build your plan.</p>';
+          '<p class="hint">Search <strong>Browse Drills</strong> on the left and click <strong>+ Add</strong> to build your plan.</p>';
         container.appendChild(empty);
         updateFooter(0, 0);
         return;
@@ -1898,7 +1898,6 @@
             const isActive = b === btn;
             b.classList.toggle('active', isActive);
             b.setAttribute('aria-selected', isActive ? 'true' : 'false');
-            b.tabIndex = isActive ? 0 : -1;
           });
           document.querySelectorAll('.ptab-panel').forEach(function (panel) {
             panel.classList.toggle('active', panel.id === 'psec-' + target);

@@ -36,7 +36,7 @@
     <!-- Practice view layout: two-column on wide screens -->
     <div class="practice-layout">
 
-      <!-- LEFT: Drill Library + Plan Builder controls -->
+      <!-- LEFT: Session Config + Build Method Tabs (Browse Drills / Skill Plans / Roadmap) -->
       <div class="practice-left">
 
         <!-- SESSION CONFIG -->
@@ -105,11 +105,11 @@
         </div>
 
         <!-- BUILD METHOD TABS: three alternative ways to build a plan -->
-        <div class="practice-panel ptab-card">
+        <div class="practice-panel">
           <div class="ptab-bar" role="tablist" aria-label="Build a plan">
             <button type="button" class="ptab-btn active" data-ptab="drills" role="tab" aria-selected="true" aria-controls="psec-drills" id="ptab-btn-drills">Browse Drills</button>
-            <button type="button" class="ptab-btn" data-ptab="plans" role="tab" aria-selected="false" aria-controls="psec-plans" id="ptab-btn-plans" tabindex="-1">Skill Plans</button>
-            <button type="button" class="ptab-btn" data-ptab="roadmap" role="tab" aria-selected="false" aria-controls="psec-roadmap" id="ptab-btn-roadmap" tabindex="-1">Roadmap</button>
+            <button type="button" class="ptab-btn" data-ptab="plans" role="tab" aria-selected="false" aria-controls="psec-plans" id="ptab-btn-plans">Skill Plans</button>
+            <button type="button" class="ptab-btn" data-ptab="roadmap" role="tab" aria-selected="false" aria-controls="psec-roadmap" id="ptab-btn-roadmap">Roadmap</button>
           </div>
 
           <!-- BROWSE DRILLS -->
@@ -239,7 +239,7 @@
           <div id="practice-plan-items" class="practice-plan-items" aria-label="Practice plan drill list" role="list">
             <div class="ppempty" id="ppempty">
               <p>No drills added yet.</p>
-              <p class="hint">Search the Drill Library on the left and click <strong>+ Add</strong> to build your plan.</p>
+              <p class="hint">Search <strong>Browse Drills</strong> on the left and click <strong>+ Add</strong> to build your plan.</p>
             </div>
           </div>
 
@@ -265,8 +265,8 @@
         <p>Homerun Practice helps coaches build timed baseball practice plans from a library of 368 drills sourced from the Youth Baseball Canada knowledge base. It runs entirely in your browser — no account, no server, no internet required after the first load. All data is saved locally in your browser.</p>
         <p><strong>Getting started in 3 steps:</strong></p>
         <ol>
-          <li>Fill in the <strong>Session Configuration</strong> — team, date, theme, and how much time you have.</li>
-          <li>Search or filter the <strong>Drill Library</strong> and click <strong>+</strong> on any drill to add it to your plan (or load a <strong>Skill-Focused Plan</strong> to start from a template).</li>
+          <li>Fill in the <strong>Session Configuration</strong> — team, date, theme, and how much time you have. It starts collapsed — click to expand it.</li>
+          <li>Search or filter <strong>Browse Drills</strong> and click <strong>+</strong> on any drill to add it to your plan (or switch to the <strong>Skill Plans</strong> tab to load a pre-built plan as a template).</li>
           <li>Click <strong>Save</strong> to keep the plan, or <strong>Print / PDF</strong> to hand it to your team.</li>
         </ol>
       </section>
@@ -301,6 +301,7 @@
       <section class="readme-section">
         <h3>Practice Planner</h3>
         <ul>
+          <li><strong>Build tabs:</strong> switch between three ways to build a plan — <strong>Browse Drills</strong> (search and filter the full drill library), <strong>Skill Plans</strong> (pre-built plans organized by skill), and <strong>Roadmap</strong> (a skill-progression ladder from Introductory through Advanced for each skill category).</li>
           <li><strong>Search:</strong> type in the search box to find drills by name, skill, or tags.</li>
           <li><strong>Filter by skill:</strong> click a skill chip (Hitting, Throwing, Infield, etc.) to narrow the list.</li>
           <li><strong>Filter by intensity:</strong> Low / Medium / High — useful for warm-up vs. main work vs. conditioning.</li>
@@ -310,7 +311,7 @@
           <li><strong>Reorder drills:</strong> use the ↑↓ arrows on plan items to rearrange the order.</li>
           <li><strong>Stations mode:</strong> switch the plan to Stations to run several drill groups at once, with a single time allocation per station instead of per drill.</li>
           <li><strong>Time budget:</strong> the bar shows how much of your session time is used up.</li>
-          <li><strong>Skill-Focused Plans:</strong> pre-built plans organized by skill — click any plan card to load it instantly.</li>
+          <li><strong>Skill Plans:</strong> pre-built plans organized by skill — click any plan card to load it instantly.</li>
           <li><strong>Save / Load:</strong> save your plan to browser storage and load it later.</li>
           <li><strong>Print / PDF:</strong> generates a printable practice plan with timeline, drill details, and coach's notes.</li>
         </ul>
