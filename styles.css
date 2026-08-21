@@ -314,6 +314,34 @@ body.modal-open { overflow: hidden; }
 .practice-panel-body { padding: 0.75rem 0.9rem; }
 .practice-panel-body.collapsed { display: none; }
 
+/* ---- Build-method tabs (Browse Drills / Skill Plans / Roadmap) ---- */
+.ptab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+  background: #f6f3ec;
+}
+.ptab-btn {
+  flex: 1 1 0;
+  background: transparent;
+  color: var(--color-muted);
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  padding: 0.6rem 0.5rem;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  min-height: 40px;
+}
+.ptab-btn:hover { background: #e5e9f0; color: var(--color-primary-dark); }
+.ptab-btn.active {
+  color: var(--color-primary-dark);
+  border-bottom-color: var(--color-primary);
+  background: var(--color-surface);
+}
+.ptab-panel { display: none; padding: 0.75rem 0.9rem; }
+.ptab-panel.active { display: block; }
+
 /* Budget panel */
 .practice-budget-panel { padding: 0.6rem 0.9rem; }
 .pbudget-label {

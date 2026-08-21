@@ -104,13 +104,16 @@
           </div>
         </div>
 
-        <!-- DRILL SEARCH & FILTER -->
-        <div class="practice-panel">
-          <div class="practice-panel-head" data-psection="drills">
-            <span>Drill Library</span>
-            <span class="pchevron">&#9660;</span>
+        <!-- BUILD METHOD TABS: three alternative ways to build a plan -->
+        <div class="practice-panel ptab-card">
+          <div class="ptab-bar" role="tablist" aria-label="Build a plan">
+            <button type="button" class="ptab-btn active" data-ptab="drills" role="tab" aria-selected="true" aria-controls="psec-drills" id="ptab-btn-drills">Browse Drills</button>
+            <button type="button" class="ptab-btn" data-ptab="plans" role="tab" aria-selected="false" aria-controls="psec-plans" id="ptab-btn-plans" tabindex="-1">Skill Plans</button>
+            <button type="button" class="ptab-btn" data-ptab="roadmap" role="tab" aria-selected="false" aria-controls="psec-roadmap" id="ptab-btn-roadmap" tabindex="-1">Roadmap</button>
           </div>
-          <div class="practice-panel-body" id="psec-drills">
+
+          <!-- BROWSE DRILLS -->
+          <div class="ptab-panel active" id="psec-drills" role="tabpanel" aria-labelledby="ptab-btn-drills">
             <div class="pdrill-search-row">
               <div class="pdrill-search-wrap">
                 <span class="pdrill-search-ico" aria-hidden="true">&#128269;</span>
@@ -171,31 +174,20 @@
             </div>
             <!-- Search status + results count -->
             <div id="pdrill-status" class="pdrill-status" aria-live="polite" aria-atomic="true"></div>
+            <!-- Drill cards list: was a sibling of this panel before (always visible
+                 regardless of accordion state); now lives inside the Browse Drills
+                 tab panel so it hides/shows together with the search controls. -->
+            <div class="pdrill-cards-scroll" id="pdrill-cards" role="list" aria-label="Drill results"></div>
           </div>
-        </div>
 
-        <!-- DRILL CARDS LIST -->
-        <div class="pdrill-cards-scroll" id="pdrill-cards" role="list" aria-label="Drill results"></div>
-
-        <!-- SKILL-FOCUSED PLANS -->
-        <div class="practice-panel">
-          <div class="practice-panel-head" data-psection="plans">
-            <span>Skill-Focused Plans</span>
-            <span class="pchevron">&#9660;</span>
-          </div>
-          <div class="practice-panel-body" id="psec-plans">
+          <!-- SKILL PLANS -->
+          <div class="ptab-panel" id="psec-plans" role="tabpanel" aria-labelledby="ptab-btn-plans">
             <div class="pplan-tabs" id="pplan-skill-tabs" role="tablist" aria-label="Filter plans by skill"></div>
             <div class="pplan-gallery" id="pplan-gallery" role="list"></div>
           </div>
-        </div>
 
-        <!-- SKILL-PROGRESSION ROADMAP -->
-        <div class="practice-panel">
-          <div class="practice-panel-head" data-psection="roadmap">
-            <span>Roadmap</span>
-            <span class="pchevron">&#9660;</span>
-          </div>
-          <div class="practice-panel-body" id="psec-roadmap">
+          <!-- ROADMAP -->
+          <div class="ptab-panel" id="psec-roadmap" role="tabpanel" aria-labelledby="ptab-btn-roadmap">
             <div id="proadmap-container"></div>
           </div>
         </div>

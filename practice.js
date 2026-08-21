@@ -1887,6 +1887,26 @@
       });
     }
 
+    // ── Build-method tabs (Browse Drills / Skill Plans / Roadmap) ──────────
+
+    function bindPracticeTabs() {
+      const tabs = document.querySelectorAll('.ptab-btn');
+      tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const target = btn.getAttribute('data-ptab');
+          tabs.forEach(function (b) {
+            const isActive = b === btn;
+            b.classList.toggle('active', isActive);
+            b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            b.tabIndex = isActive ? 0 : -1;
+          });
+          document.querySelectorAll('.ptab-panel').forEach(function (panel) {
+            panel.classList.toggle('active', panel.id === 'psec-' + target);
+          });
+        });
+      });
+    }
+
     // ── Filter chip binding ────────────────────────────────────────────────
 
     function bindChips(groupId, dataAttr, onChange) {
@@ -2012,6 +2032,7 @@
       renderDrillCards();
     });
     bindCollapsibles();
+    bindPracticeTabs();
     bindMetaInputs();
     bindPracticeButtons();
     bindExportImport();
