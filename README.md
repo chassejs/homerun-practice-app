@@ -19,31 +19,34 @@ computer. There is no cloud and no account.
 ## The Practice Planner
 
 1. **Session Configuration** — team name, date, theme/focus, location, start
-   time, session duration, and coach's notes.
-2. **Drill Library** — search 368 drills sourced from the Youth Baseball
-   Canada knowledge base, or filter by skill, intensity, age range, or
-   level (Introductory through Advanced). Click a card to see full detail
-   (purpose, setup, coaching cues, execution steps, common faults,
-   equipment, how to progress); click **+** to add it to your plan.
-3. **Skill-Focused Plans** — pre-built plans organized by skill; click one to
-   load it instantly.
-4. **Roadmap** — a skill-progression ladder for each of the ten skill
-   categories (throwing through bunting), with four stages: Introductory
-   (5–8U), Beginner (8–10U), Intermediate (10–12U), and Advanced (12–15U).
-   Populated stage cards are the same pre-built plans as Skill-Focused
-   Plans — click one to load it into the builder. Empty stages show a
-   "Coming soon" placeholder so the full path is always visible.
-5. **The plan panel (right)** — build your plan in one of two modes:
+   time, session duration, and coach's notes. Starts collapsed; click to
+   expand it.
+2. **Build a plan** — three tabs on the left offer different ways to build
+   your plan:
+   - **Browse Drills** — search 368 drills sourced from the Youth Baseball
+     Canada knowledge base, or filter by skill, intensity, age range, or
+     level (Introductory through Advanced). Click a card to see full detail
+     (purpose, setup, coaching cues, execution steps, common faults,
+     equipment, how to progress); click **+** to add it to your plan.
+   - **Skill Plans** — pre-built plans organized by skill; click one to
+     load it instantly.
+   - **Roadmap** — a skill-progression ladder for each of the ten skill
+     categories (throwing through bunting), with four stages: Introductory
+     (5–8U), Beginner (8–10U), Intermediate (10–12U), and Advanced (12–15U).
+     Populated stage cards are the same pre-built plans as Skill Plans —
+     click one to load it into the builder. Empty stages show a
+     "Coming soon" placeholder so the full path is always visible.
+3. **The plan panel (right)** — build your plan in one of two modes:
    - **Sequential drills** — an ordered list, each drill with its own
      editable duration.
    - **Stations** — split the session into stations (e.g. hitting, infield,
      baserunning) running in parallel, each with one time allocation and its
      own drill list.
    A live **time budget bar** shows how much of your session is used up.
-6. **Save / Load** — save the current plan to this browser and reopen it
+4. **Save / Load** — save the current plan to this browser and reopen it
    later. **Undo Last** reverts the most recent change; **Clear Plan** wipes
    the current plan (with confirmation).
-7. **Print / PDF** — a clean, timed practice sheet with the timeline (or
+5. **Print / PDF** — a clean, timed practice sheet with the timeline (or
    station breakdown), drill details, and your coach's notes. Choose
    **"Save as PDF"** as the printer to export a file.
 

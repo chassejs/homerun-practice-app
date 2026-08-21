@@ -38,25 +38,14 @@ window.HRP_APP_UPDATES = (function () {
     }
   }
 
-  function parseVersion(v) {
-    if (v == null) return null;
-    var s = String(v).replace(/^\s+|\s+$/g, '');
-    if (!s) return null;
-    if (s.charAt(0) === 'v' || s.charAt(0) === 'V') s = s.slice(1);
-    var parts = s.split('.');
-    var major = parseInt(parts[0], 10);
-    var minor = parseInt(parts[1], 10);
-    if (isNaN(major) || isNaN(minor)) return null;
-    return { major: major, minor: minor };
-  }
-
+  // Single source of truth for version comparison lives in versionCompat.js
+  // (shared with backup/restore compatibility checks) so the two never
+  // drift apart. versionCompat.js is loaded before this file in index.html.
   function compareVersions(a, b) {
-    var av = parseVersion(a);
-    var bv = parseVersion(b);
-    if (!av || !bv) return 0;
-    if (av.major !== bv.major) return av.major > bv.major ? 1 : -1;
-    if (av.minor !== bv.minor) return av.minor > bv.minor ? 1 : -1;
-    return 0;
+    if (!window.HRP_VERSION_COMPAT || typeof window.HRP_VERSION_COMPAT.compareVersions !== 'function') {
+      return 0;
+    }
+    return window.HRP_VERSION_COMPAT.compareVersions(a, b);
   }
 
   function findChangelogEntry(version) {

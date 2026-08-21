@@ -36,16 +36,16 @@
     <!-- Practice view layout: two-column on wide screens -->
     <div class="practice-layout">
 
-      <!-- LEFT: Drill Library + Plan Builder controls -->
+      <!-- LEFT: Session Config + Build Method Tabs (Browse Drills / Skill Plans / Roadmap) -->
       <div class="practice-left">
 
         <!-- SESSION CONFIG -->
         <div class="practice-panel">
-          <div class="practice-panel-head" data-psection="session">
+          <div class="practice-panel-head collapsed" data-psection="session">
             <span>Session Configuration</span>
             <span class="pchevron">&#9660;</span>
           </div>
-          <div class="practice-panel-body" id="psec-session">
+          <div class="practice-panel-body collapsed" id="psec-session">
             <div class="pform-two-col">
               <div class="pfield">
                 <label for="pp-team">Team Name</label>
@@ -104,13 +104,16 @@
           </div>
         </div>
 
-        <!-- DRILL SEARCH & FILTER -->
+        <!-- BUILD METHOD TABS: three alternative ways to build a plan -->
         <div class="practice-panel">
-          <div class="practice-panel-head" data-psection="drills">
-            <span>Drill Library</span>
-            <span class="pchevron">&#9660;</span>
+          <div class="ptab-bar" role="tablist" aria-label="Build a plan">
+            <button type="button" class="ptab-btn active" data-ptab="drills" role="tab" aria-selected="true" aria-controls="psec-drills" id="ptab-btn-drills">Browse Drills</button>
+            <button type="button" class="ptab-btn" data-ptab="plans" role="tab" aria-selected="false" aria-controls="psec-plans" id="ptab-btn-plans">Skill Plans</button>
+            <button type="button" class="ptab-btn" data-ptab="roadmap" role="tab" aria-selected="false" aria-controls="psec-roadmap" id="ptab-btn-roadmap">Roadmap</button>
           </div>
-          <div class="practice-panel-body" id="psec-drills">
+
+          <!-- BROWSE DRILLS -->
+          <div class="ptab-panel active" id="psec-drills" role="tabpanel" aria-labelledby="ptab-btn-drills">
             <div class="pdrill-search-row">
               <div class="pdrill-search-wrap">
                 <span class="pdrill-search-ico" aria-hidden="true">&#128269;</span>
@@ -171,39 +174,22 @@
             </div>
             <!-- Search status + results count -->
             <div id="pdrill-status" class="pdrill-status" aria-live="polite" aria-atomic="true"></div>
+            <!-- Drill cards list: was a sibling of this panel before (always visible
+                 regardless of accordion state); now lives inside the Browse Drills
+                 tab panel so it hides/shows together with the search controls. -->
+            <div class="pdrill-cards-scroll" id="pdrill-cards" role="list" aria-label="Drill results"></div>
           </div>
-        </div>
 
-        <!-- DRILL CARDS LIST -->
-        <div class="pdrill-cards-scroll" id="pdrill-cards" role="list" aria-label="Drill results"></div>
-
-        <!-- SKILL-FOCUSED PLANS -->
-        <div class="practice-panel">
-          <div class="practice-panel-head" data-psection="plans">
-            <span>Skill-Focused Plans</span>
-            <span class="pchevron">&#9660;</span>
-          </div>
-          <div class="practice-panel-body" id="psec-plans">
+          <!-- SKILL PLANS -->
+          <div class="ptab-panel" id="psec-plans" role="tabpanel" aria-labelledby="ptab-btn-plans">
             <div class="pplan-tabs" id="pplan-skill-tabs" role="tablist" aria-label="Filter plans by skill"></div>
             <div class="pplan-gallery" id="pplan-gallery" role="list"></div>
           </div>
-        </div>
 
-        <!-- SKILL-PROGRESSION ROADMAP -->
-        <div class="practice-panel">
-          <div class="practice-panel-head" data-psection="roadmap">
-            <span>Roadmap</span>
-            <span class="pchevron">&#9660;</span>
-          </div>
-          <div class="practice-panel-body" id="psec-roadmap">
+          <!-- ROADMAP -->
+          <div class="ptab-panel" id="psec-roadmap" role="tabpanel" aria-labelledby="ptab-btn-roadmap">
             <div id="proadmap-container"></div>
           </div>
-        </div>
-
-        <!-- PLAN ACTIONS -->
-        <div class="practice-plan-actions">
-          <button type="button" class="btn-secondary" id="pp-btn-undo" disabled>&#8617; Undo Last</button>
-          <button type="button" class="btn-secondary btn-danger" id="pp-btn-clear">Clear Plan</button>
         </div>
 
       </div><!-- /.practice-left -->
@@ -215,6 +201,8 @@
             <div class="practice-plan-title-row">
               <h3 id="practice-plan-h3">Practice Plan</h3>
               <div class="practice-plan-hdr-actions no-print">
+                <button type="button" class="btn-secondary btn-sm" id="pp-btn-undo" disabled>&#8617; Undo Last</button>
+                <button type="button" class="btn-secondary btn-sm btn-danger" id="pp-btn-clear">Clear Plan</button>
                 <button type="button" class="btn-secondary btn-sm" id="pp-btn-save" title="Save plan to browser storage">Save</button>
                 <button type="button" class="btn-secondary btn-sm" id="pp-btn-load" title="Load a saved plan">Load</button>
                 <button type="button" class="btn-secondary btn-sm" id="pp-btn-export" title="Download all saved plans as a JSON file">Export</button>
@@ -251,7 +239,7 @@
           <div id="practice-plan-items" class="practice-plan-items" aria-label="Practice plan drill list" role="list">
             <div class="ppempty" id="ppempty">
               <p>No drills added yet.</p>
-              <p class="hint">Search the Drill Library on the left and click <strong>+ Add</strong> to build your plan.</p>
+              <p class="hint">Search <strong>Browse Drills</strong> on the left and click <strong>+ Add</strong> to build your plan.</p>
             </div>
           </div>
 
@@ -277,8 +265,8 @@
         <p>Homerun Practice helps coaches build timed baseball practice plans from a library of 368 drills sourced from the Youth Baseball Canada knowledge base. It runs entirely in your browser — no account, no server, no internet required after the first load. All data is saved locally in your browser.</p>
         <p><strong>Getting started in 3 steps:</strong></p>
         <ol>
-          <li>Fill in the <strong>Session Configuration</strong> — team, date, theme, and how much time you have.</li>
-          <li>Search or filter the <strong>Drill Library</strong> and click <strong>+</strong> on any drill to add it to your plan (or load a <strong>Skill-Focused Plan</strong> to start from a template).</li>
+          <li>Fill in the <strong>Session Configuration</strong> — team, date, theme, and how much time you have. It starts collapsed — click to expand it.</li>
+          <li>Search or filter <strong>Browse Drills</strong> and click <strong>+</strong> on any drill to add it to your plan (or switch to the <strong>Skill Plans</strong> tab to load a pre-built plan as a template).</li>
           <li>Click <strong>Save</strong> to keep the plan, or <strong>Print / PDF</strong> to hand it to your team.</li>
         </ol>
       </section>
@@ -313,6 +301,7 @@
       <section class="readme-section">
         <h3>Practice Planner</h3>
         <ul>
+          <li><strong>Build tabs:</strong> switch between three ways to build a plan — <strong>Browse Drills</strong> (search and filter the full drill library), <strong>Skill Plans</strong> (pre-built plans organized by skill), and <strong>Roadmap</strong> (a skill-progression ladder from Introductory through Advanced for each skill category).</li>
           <li><strong>Search:</strong> type in the search box to find drills by name, skill, or tags.</li>
           <li><strong>Filter by skill:</strong> click a skill chip (Hitting, Throwing, Infield, etc.) to narrow the list.</li>
           <li><strong>Filter by intensity:</strong> Low / Medium / High — useful for warm-up vs. main work vs. conditioning.</li>
@@ -322,7 +311,7 @@
           <li><strong>Reorder drills:</strong> use the ↑↓ arrows on plan items to rearrange the order.</li>
           <li><strong>Stations mode:</strong> switch the plan to Stations to run several drill groups at once, with a single time allocation per station instead of per drill.</li>
           <li><strong>Time budget:</strong> the bar shows how much of your session time is used up.</li>
-          <li><strong>Skill-Focused Plans:</strong> pre-built plans organized by skill — click any plan card to load it instantly.</li>
+          <li><strong>Skill Plans:</strong> pre-built plans organized by skill — click any plan card to load it instantly.</li>
           <li><strong>Save / Load:</strong> save your plan to browser storage and load it later.</li>
           <li><strong>Print / PDF:</strong> generates a printable practice plan with timeline, drill details, and coach's notes.</li>
         </ul>

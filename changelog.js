@@ -10,12 +10,23 @@ window.HRP_CHANGELOG = (function () {
 
   return [
     {
-      version: '1.2',
+      version: '1.3',
       date: '2026-08-21',
       type: 'minor',
       title: 'Fix mobile layout overflow',
       highlights: [
         'Fixed a horizontal scrolling/overflow bug on narrow phone screens (≤375px) that cut off the right edge of the Practice Planner.'
+      ]
+    },
+    {
+      version: '1.2',
+      date: '2026-08-21',
+      type: 'minor',
+      title: 'Drill library navigation redesign',
+      highlights: [
+        'Browse Drills, Skill Plans, and Roadmap are now tabs instead of stacked sections — no more scrolling past the entire drill library to find a pre-built plan or the skill roadmap.',
+        'Session Configuration now starts collapsed to get out of the way once you\'ve filled it in.',
+        'Undo Last and Clear Plan moved next to Save/Load/Export/Import/Print, where the rest of the plan controls live.'
       ]
     },
     {
