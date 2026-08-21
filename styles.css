@@ -678,14 +678,21 @@ body.modal-open { overflow: hidden; }
   text-align: center;
 }
 
-/* ---- Plan builder action buttons ---- */
-.practice-plan-actions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-  margin-bottom: 0.75rem;
-}
 .btn-sm { padding: 0.25rem 0.65rem; font-size: var(--text-sm); min-height: 30px; }
+
+/* Clear Plan keeps a distinct destructive look even inside the dark navy
+   plan header, where .btn-danger's default white/red styling (meant for
+   a light background) would otherwise be overridden by the more specific
+   .practice-plan-hdr-actions button rule (equal specificity, later in
+   source order, so it would win outright without this). */
+.practice-plan-hdr-actions button.btn-danger {
+  background: rgba(163, 48, 31, 0.35);
+  border-color: #ffb3ab;
+  color: #ffe1de;
+}
+.practice-plan-hdr-actions button.btn-danger:hover {
+  background: rgba(163, 48, 31, 0.55);
+}
 
 /* ---- RIGHT: Practice plan panel ---- */
 .practice-right { position: sticky; top: 5rem; }
