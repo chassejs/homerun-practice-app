@@ -56,8 +56,9 @@ console.log('\nversion identity');
 let appVersion = null, buildId = null;
 if (has('version.js')) {
   const src = read('version.js');
-  appVersion = (src.match(/var APP_VERSION\s*=\s*'([^']+)'/) || [])[1] || null;
-  buildId = (src.match(/var BUILD_ID\s*=\s*'([^']+)'/) || [])[1] || null;
+  // var / const / let, single or double quotes — these repos differ.
+  appVersion = (src.match(/(?:var|const|let)\s+APP_VERSION\s*=\s*['"]([^'"]+)['"]/) || [])[1] || null;
+  buildId = (src.match(/(?:var|const|let)\s+BUILD_ID\s*=\s*['"]([^'"]+)['"]/) || [])[1] || null;
   if (appVersion) ok('version.js APP_VERSION ' + appVersion);
   else warn('version.js present but APP_VERSION not in the expected literal shape');
 } else {
