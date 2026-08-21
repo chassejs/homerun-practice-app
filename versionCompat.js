@@ -46,7 +46,9 @@ window.HRP_VERSION_COMPAT = (function () {
   // Handles "major.minor" semver-style strings (e.g. "1.0", "2.3").
   // ---------------------------------------------------------------
   function parseVer(v) {
-    var parts = String(v || '0.0').split('.');
+    var s = String(v == null ? '0.0' : v).replace(/^\s+|\s+$/g, '');
+    if (s.charAt(0) === 'v' || s.charAt(0) === 'V') s = s.slice(1);
+    var parts = s.split('.');
     return { major: parseInt(parts[0], 10) || 0, minor: parseInt(parts[1], 10) || 0 };
   }
 
