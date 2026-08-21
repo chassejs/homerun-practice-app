@@ -1,0 +1,84 @@
+#!/bin/sh
+# ===================================================================
+# .githooks/pre-push — gates the DEPLOY branch, not main.
+#
+# Netlify's production branch for this site is `deploy`. Pushing to
+# `main` publishes nothing, so day-to-day work is free and unguarded.
+# Promoting is the deploy gesture:
+#
+#     git push origin main:deploy
+#
+# That push is the metered, user-visible act, so it is the one gated.
+# A promotion is refused if preflight fails, or if APP_VERSION did not
+# increase over what is already deployed (only checked where this repo
+# actually has a version.js — see version_at).
+#
+# Why a check and not an automatic bump: git has already decided which
+# refs to send by the time pre-push runs, so a commit created here
+# would sit unpushed and the very next push would fail.
+#
+# Install: git config core.hooksPath .githooks
+# ===================================================================
+
+ZERO='0000000000000000000000000000000000000000'
+DEPLOY_REF='refs/heads/deploy'
+
+version_at() {
+  blob=$(git show "$1:version.js" 2>/dev/null) || return 1
+  value=$(printf '%s' "$blob" | sed -n "s/.*var APP_VERSION = '\([0-9][0-9]*\.[0-9][0-9]*\)';.*/\1/p" | head -n 1)
+  [ -z "$value" ] && return 1
+  printf '%s' "$value"
+}
+
+# Integer major-then-minor compare, so 1.10 correctly beats 1.9.
+version_gt() {
+  awk -v a="$1" -v b="$2" '
+    BEGIN {
+      split(a, av, "."); split(b, bv, ".");
+      if (av[1]+0 != bv[1]+0) { exit !(av[1]+0 > bv[1]+0) }
+      exit !(av[2]+0 > bv[2]+0)
+    }'
+}
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ "$remote_ref" = "$DEPLOY_REF" ] || continue      # not a deploy — let it through
+  [ "$local_sha" = "$ZERO" ] && continue             # branch deletion
+
+  echo "pre-push: promoting to deploy — this publishes. Checking first."
+
+  if [ -f scripts/preflight.mjs ]; then
+    if ! node scripts/preflight.mjs; then
+      echo >&2
+      echo "pre-push: BLOCKED — preflight failed, so this promotion is not deployable." >&2
+      exit 1
+    fi
+  else
+    echo "pre-push: no scripts/preflight.mjs — skipping preflight."
+  fi
+
+  new_version=$(version_at "$local_sha") || {
+    echo "pre-push: no readable APP_VERSION in this repo — skipping the version check."
+    continue
+  }
+
+  if [ "$remote_sha" = "$ZERO" ]; then
+    echo "pre-push: first deploy — version $new_version accepted."
+    continue
+  fi
+
+  old_version=$(version_at "$remote_sha") || {
+    echo "pre-push: could not read the deployed APP_VERSION — skipping the version check."
+    continue
+  }
+
+  if ! version_gt "$new_version" "$old_version"; then
+    echo "pre-push: BLOCKED — the version must increase on every deploy." >&2
+    echo "          deploy is at $old_version; this promotion is $new_version." >&2
+    echo "          Write the changelog entry, bump the version, commit, then promote." >&2
+    exit 1
+  fi
+
+  echo "pre-push: $old_version → $new_version — deploying."
+done
+
+exit 0
