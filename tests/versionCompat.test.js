@@ -268,6 +268,31 @@ test('version.json version matches APP_VERSION', function () {
   assertEqual(/^\d{4}-\d{2}-\d{2}$/.test(data.released), true, 'version.json released format (' + data.released + ')');
 });
 
+// ---------------------------------------------------------------------------
+// Service-worker cache invalidation. sw.js is cache-first with a fixed
+// cache name, so a deploy that leaves that literal untouched keeps serving
+// the old precache to returning visitors no matter what else shipped —
+// this happened for real. Tying CACHE to APP_VERSION and asserting it here
+// makes forgetting the docs/VERSIONING.md checklist item a test failure
+// instead of a silent miss. Release-number-agnostic: reads APP_VERSION
+// dynamically, so a bump never requires a test edit.
+// ---------------------------------------------------------------------------
+const swCode = fs.readFileSync(path.join(__dirname, '..', 'sw.js'), 'utf8');
+
+test('sw.js CACHE name carries the current APP_VERSION', function () {
+  const m = swCode.match(/const CACHE = '([^']+)';/);
+  assertEqual(!!m, true, 'sw.js has a recognisable CACHE constant');
+  assertEqual(m && m[1].indexOf(APP_VERSION) !== -1, true,
+    'CACHE ("' + (m && m[1]) + '") should contain APP_VERSION ("' + APP_VERSION + '")');
+});
+
+test('sw.js does not precache /version.json', function () {
+  const block = swCode.match(/const ASSETS = \[([\s\S]*?)\];/);
+  assertEqual(!!block, true, 'sw.js has a recognisable ASSETS array');
+  assertEqual(block && block[1].indexOf('/version.json') === -1, true,
+    '/version.json must come from the network, never the precache');
+});
+
 test('changelog.js newest entry is the current release', function () {
   assertEqual(Array.isArray(changelog) && changelog.length > 0, true, 'changelog.js is a non-empty array');
   assertEqual(changelog[0].version, APP_VERSION, 'changelog.js newest entry version');

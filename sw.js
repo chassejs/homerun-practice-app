@@ -1,6 +1,13 @@
 // NOTE: /version.json is deliberately NOT precached — it is the freshness
 // probe the update self-check reads, and must always come from the network.
-const CACHE = 'homerun-practice-v1';
+//
+// CACHE embeds APP_VERSION on purpose. This worker is cache-first (see the
+// fetch handler below), so a browser only re-installs it when sw.js's own
+// bytes change — a deploy that leaves this literal untouched serves the old
+// precache forever, no matter what else shipped. Bump it every release
+// alongside APP_VERSION (checklist in docs/VERSIONING.md; enforced by the
+// "sw.js CACHE" test in tests/versionCompat.test.js).
+const CACHE = 'homerun-practice-v1.4';
 const ASSETS = [
   '/',
   '/index.html',

@@ -1,6 +1,6 @@
 {
   "name": "homerun-practice-app",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Homerun Practice — baseball practice plan builder for Homerun Baseball Ottawa, split out of the Homerun Lineup app.",
   "private": true,
   "scripts": {

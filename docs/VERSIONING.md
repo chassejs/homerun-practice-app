@@ -170,7 +170,7 @@ After they confirm, the backup is migrated and restored without any data loss.
 - [ ] If auto-migratable: add a `MIGRATIONS` entry in `versionCompat.js`
 - [ ] If breaking: add to `BREAKING_BOUNDARIES` and raise `MIN_COMPATIBLE_DATA_VERSION`
 - [ ] Run `npm test` and confirm all tests pass
-- [ ] Bump the service worker cache name in `sw.js` (e.g. `homerun-practice-v2`) to force cache refresh
+- [ ] Bump the service worker cache name in `sw.js` to embed the new `APP_VERSION` (e.g. `homerun-practice-v1.4`) — `npm test` fails if you forget
 
 ## Update Self-Check & What's New
 

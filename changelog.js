@@ -10,6 +10,15 @@ window.HRP_CHANGELOG = (function () {
 
   return [
     {
+      version: '1.4',
+      date: '2026-08-21',
+      type: 'minor',
+      title: 'Fix: updates could fail to reach you',
+      highlights: [
+        'The offline cache now changes with every release. Previously the cache name never changed between deploys, so once installed as an app (or just left open a while), you could keep seeing an old version even after a new one shipped — the "update available" prompt still worked, but silently reopening the app did not always pick up the fix underneath it.'
+      ]
+    },
+    {
       version: '1.3',
       date: '2026-08-21',
       type: 'minor',

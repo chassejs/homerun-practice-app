@@ -4,6 +4,10 @@
 
 Numbering scheme: a minor update adds 0.1; a major update adds 1.0 and resets the minor to 0.
 
+## v1.4 — 2026-08-21 (minor) — Fix: updates could fail to reach you
+
+- The offline cache now changes with every release. Previously the cache name never changed between deploys, so you could keep seeing an old version even after a new one shipped.
+
 ## v1.3 — 2026-08-21 (minor) — Fix mobile layout overflow
 
 - Fixed a horizontal scrolling/overflow bug on narrow phone screens (≤375px) that cut off the right edge of the Practice Planner.
