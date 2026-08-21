@@ -4,6 +4,12 @@
 
 Numbering scheme: a minor update adds 0.1; a major update adds 1.0 and resets the minor to 0.
 
+## v1.2 — 2026-08-21 (minor) — Drill library navigation redesign
+
+- Browse Drills, Skill Plans, and Roadmap are now tabs instead of stacked sections — no more scrolling past the entire drill library to find a pre-built plan or the skill roadmap.
+- Session Configuration now starts collapsed to get out of the way once you've filled it in.
+- Undo Last and Clear Plan moved next to Save/Load/Export/Import/Print, where the rest of the plan controls live.
+
 ## v1.1 — 2026-08-20 (minor) — Drill library Roadmap + Level filter, new app icon
 
 - New Roadmap view in the drill library — browse drills organized by skill progression.
