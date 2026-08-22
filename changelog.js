@@ -10,6 +10,15 @@ window.HRP_CHANGELOG = (function () {
 
   return [
     {
+      version: '1.5',
+      date: '2026-08-22',
+      type: 'minor',
+      title: 'Demo video links for drills',
+      highlights: [
+        '85 drills in the library now show a red camera icon — click it to watch a demonstration video, which opens in a new tab. More drills will get videos in follow-up updates.'
+      ]
+    },
+    {
       version: '1.4',
       date: '2026-08-21',
       type: 'minor',

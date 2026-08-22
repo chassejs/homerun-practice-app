@@ -1,0 +1,5 @@
+ index.html               |  1 +
+ practice.js              | 29 ++++++++++++++
+ src/drill-videos-data.js | 99 ++++++++++++++++++++++++++++++++++++++++++++++++
+ styles.css               | 47 +++++++++++++++++++++++
+ 4 files changed, 176 insertions(+)

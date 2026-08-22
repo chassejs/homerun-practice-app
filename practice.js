@@ -306,6 +306,20 @@
       });
       card.appendChild(addBtn);
 
+      if (window.DRILL_VIDEOS_DATA && window.DRILL_VIDEOS_DATA[drill.id]) {
+        const videoLink = document.createElement('a');
+        videoLink.className = 'pdrill-video-link';
+        videoLink.href = window.DRILL_VIDEOS_DATA[drill.id].url;
+        videoLink.target = '_blank';
+        videoLink.rel = 'noopener noreferrer';
+        videoLink.setAttribute('aria-label', 'Watch demo video for ' + drill.title);
+        videoLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>';
+        videoLink.addEventListener('click', function (e) {
+          e.stopPropagation();
+        });
+        card.insertBefore(videoLink, addBtn);
+      }
+
       // Click body = open detail
       card.addEventListener('click', function () { openDrillDetail(drill.id); });
       card.addEventListener('keydown', function (e) {
@@ -367,6 +381,21 @@
       bdgs.appendChild(makeBadge('pbadge-low', drill.ageMin + '–' + drill.ageMax + 'U'));
       bdgs.appendChild(makeBadge('pbadge-med', drill.durationMinutes + ' min'));
       titleGroup.appendChild(bdgs);
+
+      if (window.DRILL_VIDEOS_DATA && window.DRILL_VIDEOS_DATA[drill.id]) {
+        const videoLink = document.createElement('a');
+        videoLink.className = 'pdrill-video-link-detail';
+        videoLink.href = window.DRILL_VIDEOS_DATA[drill.id].url;
+        videoLink.target = '_blank';
+        videoLink.rel = 'noopener noreferrer';
+        videoLink.setAttribute('aria-label', 'Watch demo video for ' + drill.title);
+        videoLink.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>';
+        videoLink.addEventListener('click', function (e) {
+          e.stopPropagation();
+        });
+        titleGroup.appendChild(videoLink);
+      }
+
       header.appendChild(titleGroup);
 
       const closeBtn = document.createElement('button');

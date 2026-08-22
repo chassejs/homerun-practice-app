@@ -4,6 +4,10 @@
 
 Numbering scheme: a minor update adds 0.1; a major update adds 1.0 and resets the minor to 0.
 
+## v1.5 — 2026-08-22 (minor) — Demo video links for drills
+
+- 85 drills in the library now show a red camera icon — click it to watch a demonstration video (opens in a new tab). More drills will get videos in follow-up updates.
+
 ## v1.4 — 2026-08-21 (minor) — Fix: updates could fail to reach you
 
 - The offline cache now changes with every release. Previously the cache name never changed between deploys, so you could keep seeing an old version even after a new one shipped.
