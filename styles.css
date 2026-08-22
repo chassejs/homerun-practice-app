@@ -1201,12 +1201,21 @@ button.star-btn:focus-visible {
   font-size: var(--text-sm);
   margin-bottom: 0.25rem;
 }
+.feedback-drill-fields.hidden { display: none; }
 #feedback-category,
 #feedback-details {
   width: 100%;
   padding: 0.35rem 0.5rem;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
+}
+#feedback-drill-name,
+#feedback-drill-video {
+  width: 100%;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font: inherit;
 }
 #feedback-details {
   resize: vertical;

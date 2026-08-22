@@ -20,6 +20,7 @@ window.HRP_FEEDBACK = (function () {
     { value: 'printing', label: 'Printing' },
     { value: 'design', label: 'Design & layout' },
     { value: 'feature', label: 'Feature request' },
+    { value: 'suggest-drill', label: 'Suggest a drill to add' },
     { value: 'question', label: 'Question / need help' },
     { value: 'other', label: 'Other' }
   ];
@@ -298,6 +299,22 @@ window.HRP_FEEDBACK = (function () {
           categoryEl.appendChild(api.el('option', optAttrs));
         }
 
+        var drillNameLabel = api.el('label', { for: 'feedback-drill-name', text: 'Drill name' });
+        var drillNameEl = api.el('input', { type: 'text', id: 'feedback-drill-name' });
+
+        var drillVideoLabel = api.el('label', { for: 'feedback-drill-video', text: 'Link to a YouTube demo (optional)' });
+        var drillVideoEl = api.el('input', {
+          type: 'text',
+          id: 'feedback-drill-video',
+          placeholder: 'https://www.youtube.com/watch?v=…'
+        });
+
+        var drillFieldsWrap = api.el('div', { class: 'feedback-drill-fields hidden' }, [
+          api.el('div', { class: 'feedback-field' }, [drillNameLabel, drillNameEl]),
+          api.el('div', { class: 'feedback-field' }, [drillVideoLabel, drillVideoEl])
+        ]);
+        drillFieldsWrap.classList.toggle('hidden', categoryEl.value !== 'suggest-drill');
+
         var detailsLabel = api.el('label', { for: 'feedback-details', text: 'Describe the issue or idea' });
         var detailsEl = api.el('textarea', {
           id: 'feedback-details',
@@ -311,6 +328,8 @@ window.HRP_FEEDBACK = (function () {
           counterEl.textContent = len + ' / ' + DETAILS_MAX;
           maybeClearError();
         });
+        drillNameEl.addEventListener('input', maybeClearError);
+        drillVideoEl.addEventListener('input', maybeClearError);
 
         var errorEl = api.el('p', { class: 'feedback-error hidden', role: 'alert' });
 
@@ -319,6 +338,8 @@ window.HRP_FEEDBACK = (function () {
           errorEl.classList.remove('hidden');
           lastErrorOn = field;
           if (field === 'category') categoryEl.focus();
+          else if (field === 'drillName') drillNameEl.focus();
+          else if (field === 'drillVideo') drillVideoEl.focus();
           else detailsEl.focus();
         }
 
@@ -331,10 +352,24 @@ window.HRP_FEEDBACK = (function () {
             errorEl.textContent = '';
             errorEl.classList.add('hidden');
             lastErrorOn = null;
+          } else if (lastErrorOn === 'drillName' && trim(drillNameEl.value)) {
+            errorEl.textContent = '';
+            errorEl.classList.add('hidden');
+            lastErrorOn = null;
+          } else if (lastErrorOn === 'drillVideo') {
+            var videoVal = trim(drillVideoEl.value);
+            if (!videoVal || videoVal.indexOf('http://') === 0 || videoVal.indexOf('https://') === 0) {
+              errorEl.textContent = '';
+              errorEl.classList.add('hidden');
+              lastErrorOn = null;
+            }
           }
         }
 
-        categoryEl.addEventListener('change', maybeClearError);
+        categoryEl.addEventListener('change', function () {
+          drillFieldsWrap.classList.toggle('hidden', categoryEl.value !== 'suggest-drill');
+          maybeClearError();
+        });
 
         var cancelBtn = api.el('button', { type: 'button', class: 'btn-secondary', text: 'Cancel' });
         var sendBtn = api.el('button', { type: 'submit', text: 'Send feedback' });
@@ -344,6 +379,7 @@ window.HRP_FEEDBACK = (function () {
 
         var form = api.el('form', { class: 'feedback-form' }, [
           api.el('div', { class: 'feedback-field' }, [catLabelEl, categoryEl]),
+          drillFieldsWrap,
           api.el('div', { class: 'feedback-field' }, [detailsLabel, detailsEl, counterEl]),
           errorEl,
           api.el('div', { class: 'modal-actions' }, [cancelBtn, sendBtn])
@@ -355,10 +391,31 @@ window.HRP_FEEDBACK = (function () {
             showError('Please choose what your feedback is about.', 'category');
             return;
           }
+          if (categoryEl.value === 'suggest-drill') {
+            if (!trim(drillNameEl.value)) {
+              showError('Please enter the name of the drill you\'d like added.', 'drillName');
+              return;
+            }
+            var drillVideoCheck = trim(drillVideoEl.value);
+            if (drillVideoCheck && drillVideoCheck.indexOf('http://') !== 0 && drillVideoCheck.indexOf('https://') !== 0) {
+              showError('Please enter a valid video link starting with http:// or https://, or leave it blank.', 'drillVideo');
+              return;
+            }
+          } else {
+            var detailsRequired = trim(detailsEl.value);
+            if (!detailsRequired) {
+              showError('Please describe the issue or idea so we can act on it.', 'details');
+              return;
+            }
+          }
+
           var details = trim(detailsEl.value);
-          if (!details) {
-            showError('Please describe the issue or idea so we can act on it.', 'details');
-            return;
+          if (categoryEl.value === 'suggest-drill') {
+            var drillName = trim(drillNameEl.value);
+            var drillVideo = trim(drillVideoEl.value);
+            var suggestion = 'Suggested drill: ' + drillName + '\n' +
+              'Demo video: ' + (drillVideo || 'not provided');
+            details = details ? (suggestion + '\n\n' + details) : suggestion;
           }
 
           var catLabel = categoryLabel(categoryEl.value);

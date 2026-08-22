@@ -108,6 +108,7 @@
     let filterAge       = '';    // '' = all
     let filterLevel     = '';    // '' = all
     let showAllAges     = false;
+    let filterHasVideo = false;
     let searchQuery     = '';
 
     const STAGE_LABELS = {
@@ -178,6 +179,8 @@
           // Drill must overlap the selected age band
           if (d.ageMax < lo || d.ageMin > hi) return false;
         }
+        // Video filter
+        if (filterHasVideo && !(window.DRILL_VIDEOS_DATA && window.DRILL_VIDEOS_DATA[d.id])) return false;
         // Text search across all meaningful drill content. Many KB drills are
         // in the "concept" format (no `summary` frontmatter → empty purpose),
         // so setup / coaching cues / common faults are included here to keep
@@ -1997,6 +2000,14 @@
       });
     }
 
+    function bindVideoFilter() {
+      const chk = document.getElementById('pp-has-video');
+      if (chk) chk.addEventListener('change', function () {
+        filterHasVideo = chk.checked;
+        renderDrillCards();
+      });
+    }
+
     // ── Toast ──────────────────────────────────────────────────────────────
 
     let toastTimer;
@@ -2051,6 +2062,7 @@
     bindSearch();
     bindAgeFilter();
     bindLevelFilter();
+    bindVideoFilter();
     bindChips('pskill-chips', 'data-skill', function (val) {
       filterSkill = val;
       renderDrillCards();

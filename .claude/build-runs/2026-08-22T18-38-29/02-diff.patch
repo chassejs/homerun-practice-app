@@ -1,0 +1,210 @@
+diff --git a/feedback.js b/feedback.js
+index 98bfb0d..7d033c7 100644
+--- a/feedback.js
++++ b/feedback.js
+@@ -20,6 +20,7 @@ window.HRP_FEEDBACK = (function () {
+     { value: 'printing', label: 'Printing' },
+     { value: 'design', label: 'Design & layout' },
+     { value: 'feature', label: 'Feature request' },
++    { value: 'suggest-drill', label: 'Suggest a drill to add' },
+     { value: 'question', label: 'Question / need help' },
+     { value: 'other', label: 'Other' }
+   ];
+@@ -298,6 +299,22 @@ window.HRP_FEEDBACK = (function () {
+           categoryEl.appendChild(api.el('option', optAttrs));
+         }
+ 
++        var drillNameLabel = api.el('label', { for: 'feedback-drill-name', text: 'Drill name' });
++        var drillNameEl = api.el('input', { type: 'text', id: 'feedback-drill-name' });
++
++        var drillVideoLabel = api.el('label', { for: 'feedback-drill-video', text: 'Link to a YouTube demo (optional)' });
++        var drillVideoEl = api.el('input', {
++          type: 'text',
++          id: 'feedback-drill-video',
++          placeholder: 'https://www.youtube.com/watch?v=…'
++        });
++
++        var drillFieldsWrap = api.el('div', { class: 'feedback-drill-fields hidden' }, [
++          api.el('div', { class: 'feedback-field' }, [drillNameLabel, drillNameEl]),
++          api.el('div', { class: 'feedback-field' }, [drillVideoLabel, drillVideoEl])
++        ]);
++        drillFieldsWrap.classList.toggle('hidden', categoryEl.value !== 'suggest-drill');
++
+         var detailsLabel = api.el('label', { for: 'feedback-details', text: 'Describe the issue or idea' });
+         var detailsEl = api.el('textarea', {
+           id: 'feedback-details',
+@@ -311,6 +328,8 @@ window.HRP_FEEDBACK = (function () {
+           counterEl.textContent = len + ' / ' + DETAILS_MAX;
+           maybeClearError();
+         });
++        drillNameEl.addEventListener('input', maybeClearError);
++        drillVideoEl.addEventListener('input', maybeClearError);
+ 
+         var errorEl = api.el('p', { class: 'feedback-error hidden', role: 'alert' });
+ 
+@@ -319,6 +338,8 @@ window.HRP_FEEDBACK = (function () {
+           errorEl.classList.remove('hidden');
+           lastErrorOn = field;
+           if (field === 'category') categoryEl.focus();
++          else if (field === 'drillName') drillNameEl.focus();
++          else if (field === 'drillVideo') drillVideoEl.focus();
+           else detailsEl.focus();
+         }
+ 
+@@ -331,10 +352,24 @@ window.HRP_FEEDBACK = (function () {
+             errorEl.textContent = '';
+             errorEl.classList.add('hidden');
+             lastErrorOn = null;
++          } else if (lastErrorOn === 'drillName' && trim(drillNameEl.value)) {
++            errorEl.textContent = '';
++            errorEl.classList.add('hidden');
++            lastErrorOn = null;
++          } else if (lastErrorOn === 'drillVideo') {
++            var videoVal = trim(drillVideoEl.value);
++            if (!videoVal || videoVal.indexOf('http://') === 0 || videoVal.indexOf('https://') === 0) {
++              errorEl.textContent = '';
++              errorEl.classList.add('hidden');
++              lastErrorOn = null;
++            }
+           }
+         }
+ 
+-        categoryEl.addEventListener('change', maybeClearError);
++        categoryEl.addEventListener('change', function () {
++          drillFieldsWrap.classList.toggle('hidden', categoryEl.value !== 'suggest-drill');
++          maybeClearError();
++        });
+ 
+         var cancelBtn = api.el('button', { type: 'button', class: 'btn-secondary', text: 'Cancel' });
+         var sendBtn = api.el('button', { type: 'submit', text: 'Send feedback' });
+@@ -344,6 +379,7 @@ window.HRP_FEEDBACK = (function () {
+ 
+         var form = api.el('form', { class: 'feedback-form' }, [
+           api.el('div', { class: 'feedback-field' }, [catLabelEl, categoryEl]),
++          drillFieldsWrap,
+           api.el('div', { class: 'feedback-field' }, [detailsLabel, detailsEl, counterEl]),
+           errorEl,
+           api.el('div', { class: 'modal-actions' }, [cancelBtn, sendBtn])
+@@ -355,10 +391,31 @@ window.HRP_FEEDBACK = (function () {
+             showError('Please choose what your feedback is about.', 'category');
+             return;
+           }
++          if (categoryEl.value === 'suggest-drill') {
++            if (!trim(drillNameEl.value)) {
++              showError('Please enter the name of the drill you\'d like added.', 'drillName');
++              return;
++            }
++            var drillVideoCheck = trim(drillVideoEl.value);
++            if (drillVideoCheck && drillVideoCheck.indexOf('http://') !== 0 && drillVideoCheck.indexOf('https://') !== 0) {
++              showError('Please enter a valid video link starting with http:// or https://, or leave it blank.', 'drillVideo');
++              return;
++            }
++          } else {
++            var detailsRequired = trim(detailsEl.value);
++            if (!detailsRequired) {
++              showError('Please describe the issue or idea so we can act on it.', 'details');
++              return;
++            }
++          }
++
+           var details = trim(detailsEl.value);
+-          if (!details) {
+-            showError('Please describe the issue or idea so we can act on it.', 'details');
+-            return;
++          if (categoryEl.value === 'suggest-drill') {
++            var drillName = trim(drillNameEl.value);
++            var drillVideo = trim(drillVideoEl.value);
++            var suggestion = 'Suggested drill: ' + drillName + '\n' +
++              'Demo video: ' + (drillVideo || 'not provided');
++            details = details ? (suggestion + '\n\n' + details) : suggestion;
+           }
+ 
+           var catLabel = categoryLabel(categoryEl.value);
+diff --git a/index.html b/index.html
+index 120e82a..7313a27 100644
+--- a/index.html
++++ b/index.html
+@@ -171,6 +171,12 @@
+                   Show all ages
+                 </label>
+               </div>
++              <div class="pfield" style="display:flex;align-items:flex-end;padding-bottom:0.1rem">
++                <label style="display:flex;align-items:center;gap:0.4rem;font-weight:normal;font-size:var(--text-sm);cursor:pointer;text-transform:none">
++                  <input type="checkbox" id="pp-has-video" style="width:15px;height:15px">
++                  🎥 Has video only
++                </label>
++              </div>
+             </div>
+             <!-- Search status + results count -->
+             <div id="pdrill-status" class="pdrill-status" aria-live="polite" aria-atomic="true"></div>
+diff --git a/practice.js b/practice.js
+index 62546e5..23ea6bf 100644
+--- a/practice.js
++++ b/practice.js
+@@ -108,6 +108,7 @@
+     let filterAge       = '';    // '' = all
+     let filterLevel     = '';    // '' = all
+     let showAllAges     = false;
++    let filterHasVideo = false;
+     let searchQuery     = '';
+ 
+     const STAGE_LABELS = {
+@@ -178,6 +179,8 @@
+           // Drill must overlap the selected age band
+           if (d.ageMax < lo || d.ageMin > hi) return false;
+         }
++        // Video filter
++        if (filterHasVideo && !(window.DRILL_VIDEOS_DATA && window.DRILL_VIDEOS_DATA[d.id])) return false;
+         // Text search across all meaningful drill content. Many KB drills are
+         // in the "concept" format (no `summary` frontmatter → empty purpose),
+         // so setup / coaching cues / common faults are included here to keep
+@@ -1997,6 +2000,14 @@
+       });
+     }
+ 
++    function bindVideoFilter() {
++      const chk = document.getElementById('pp-has-video');
++      if (chk) chk.addEventListener('change', function () {
++        filterHasVideo = chk.checked;
++        renderDrillCards();
++      });
++    }
++
+     // ── Toast ──────────────────────────────────────────────────────────────
+ 
+     let toastTimer;
+@@ -2051,6 +2062,7 @@
+     bindSearch();
+     bindAgeFilter();
+     bindLevelFilter();
++    bindVideoFilter();
+     bindChips('pskill-chips', 'data-skill', function (val) {
+       filterSkill = val;
+       renderDrillCards();
+diff --git a/styles.css b/styles.css
+index a357d3a..e284629 100644
+--- a/styles.css
++++ b/styles.css
+@@ -1201,6 +1201,7 @@ button.star-btn:focus-visible {
+   font-size: var(--text-sm);
+   margin-bottom: 0.25rem;
+ }
++.feedback-drill-fields.hidden { display: none; }
+ #feedback-category,
+ #feedback-details {
+   width: 100%;
+@@ -1208,6 +1209,14 @@ button.star-btn:focus-visible {
+   border: 1px solid var(--color-border);
+   border-radius: var(--radius);
+ }
++#feedback-drill-name,
++#feedback-drill-video {
++  width: 100%;
++  padding: 0.35rem 0.5rem;
++  border: 1px solid var(--color-border);
++  border-radius: var(--radius);
++  font: inherit;
++}
+ #feedback-details {
+   resize: vertical;
+   min-height: 6.5rem;

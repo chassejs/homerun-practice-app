@@ -4,6 +4,11 @@
 
 Numbering scheme: a minor update adds 0.1; a major update adds 1.0 and resets the minor to 0.
 
+## v1.6 — 2026-08-22 (minor) — "Has video" filter + suggest a drill
+
+- New "🎥 Has video only" checkbox in Browse Drills narrows the library to just the drills with a demo video.
+- The feedback form now has a "Suggest a drill to add" option, with a drill name field and an optional YouTube link field.
+
 ## v1.5 — 2026-08-22 (minor) — Demo video links for drills
 
 - 85 drills in the library now show a red camera icon — click it to watch a demonstration video (opens in a new tab). More drills will get videos in follow-up updates.

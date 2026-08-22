@@ -10,6 +10,16 @@ window.HRP_CHANGELOG = (function () {
 
   return [
     {
+      version: '1.6',
+      date: '2026-08-22',
+      type: 'minor',
+      title: '"Has video" filter + suggest a drill',
+      highlights: [
+        'New "🎥 Has video only" checkbox in Browse Drills narrows the library to just the drills with a demo video.',
+        'The feedback form now has a "Suggest a drill to add" option, with a drill name field and an optional YouTube link field.'
+      ]
+    },
+    {
       version: '1.5',
       date: '2026-08-22',
       type: 'minor',
