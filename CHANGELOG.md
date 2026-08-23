@@ -4,6 +4,10 @@
 
 Numbering scheme: a minor update adds 0.1; a major update adds 1.0 and resets the minor to 0.
 
+## v1.7 — 2026-08-23 (minor) — More demo videos (191 drills)
+
+- Demo video coverage expanded from 85 to 191 drills — more than doubled. No feature changes; this is a content-only update to the video library.
+
 ## v1.6 — 2026-08-22 (minor) — "Has video" filter + suggest a drill
 
 - New "🎥 Has video only" checkbox in Browse Drills narrows the library to just the drills with a demo video.

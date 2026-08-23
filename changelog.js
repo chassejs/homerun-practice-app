@@ -10,6 +10,15 @@ window.HRP_CHANGELOG = (function () {
 
   return [
     {
+      version: '1.7',
+      date: '2026-08-23',
+      type: 'minor',
+      title: 'More demo videos (191 drills)',
+      highlights: [
+        'Demo video coverage expanded from 85 to 191 drills — more than doubled. No feature changes; this is a content-only update to the video library.'
+      ]
+    },
+    {
       version: '1.6',
       date: '2026-08-22',
       type: 'minor',
