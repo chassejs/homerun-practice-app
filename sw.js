@@ -7,7 +7,7 @@
 // precache forever, no matter what else shipped. Bump it every release
 // alongside APP_VERSION (checklist in docs/VERSIONING.md; enforced by the
 // "sw.js CACHE" test in tests/versionCompat.test.js).
-const CACHE = 'homerun-practice-v1.7';
+const CACHE = 'homerun-practice-v1.8';
 const ASSETS = [
   '/',
   '/index.html',
@@ -17,6 +17,7 @@ const ASSETS = [
   '/changelog.js',
   '/uiModal.js',
   '/feedback.js',
+  '/admin.js',
   '/appUpdates.js',
   '/shell.js',
   '/practice.js',

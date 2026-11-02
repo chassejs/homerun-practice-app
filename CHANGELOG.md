@@ -4,6 +4,12 @@
 
 Numbering scheme: a minor update adds 0.1; a major update adds 1.0 and resets the minor to 0.
 
+## v1.8 — 2026-11-02 (minor) — Admin portal and last-updated date
+
+- The footer shows the date this version was last updated, next to the version number.
+- Admin opens a portal for this browser. Sign in with username admin and password admin, then add other admins or change any admin's password. Passwords are stored only as hashes on this device.
+- The portal lists feedback comments sent from this browser so an admin can mark each one new, reviewed, or resolved. Sending feedback still opens the email as before.
+
 ## v1.7 — 2026-08-23 (minor) — More demo videos (191 drills)
 
 - Demo video coverage expanded from 85 to 191 drills — more than doubled. No feature changes; this is a content-only update to the video library.

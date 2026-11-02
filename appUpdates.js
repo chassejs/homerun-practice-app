@@ -58,11 +58,38 @@ window.HRP_APP_UPDATES = (function () {
     return list[0];
   }
 
+  var RELEASE_MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  function formatReleaseDate(iso) {
+    var parts = String(iso || '').split('-');
+    var month, day;
+    if (parts.length < 3) return iso || '';
+    month = parseInt(parts[1], 10);
+    day = parseInt(parts[2], 10);
+    if (!month || !day || month < 1 || month > 12) return iso || '';
+    return day + ' ' + RELEASE_MONTHS[month - 1] + ' ' + parts[0];
+  }
+
+  function latestReleaseDate() {
+    var list = window.HRP_CHANGELOG;
+    if (list && list[0] && list[0].date) return list[0].date;
+    return '';
+  }
+
   function initFooter() {
     if (typeof document === 'undefined') return;
     var version = getAppVersion();
     var label = document.getElementById('app-version-label');
+    var updated = document.getElementById('app-updated-label');
+    var released;
     if (label) label.textContent = version;
+    if (updated) {
+      released = latestReleaseDate();
+      if (released) {
+        updated.setAttribute('datetime', released);
+        updated.textContent = formatReleaseDate(released);
+      }
+    }
 
     var whatsNew = document.getElementById('footer-whats-new');
     if (whatsNew) {

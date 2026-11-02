@@ -300,6 +300,9 @@
         <p><strong>Staying up to date:</strong> when the app starts, it quietly checks whether a newer version has been published. If there is one, you'll see an <strong>Update available</strong> message with an <strong>Update now</strong> button. Updating only refreshes the app files — your saved practice plans are stored on this device and are never touched. If you're offline, the check is skipped and the app works exactly as usual.</p>
         <p><strong>What's new:</strong> the first time you open a new version, a short summary of the changes appears. You can bring it back any time from the <strong>What's new</strong> link in the footer.</p>
         <p><strong>Full history:</strong> <a href="changelog.html">open the version history page</a> to see every release, its date, and what changed.</p>
+        <p><strong>Last updated:</strong> the footer shows the date of the version you are running, next to the version number.</p>
+        <p><strong>Admin portal:</strong> the <strong>Admin</strong> link in the footer is where you review feedback comments saved on this browser and mark each one new, reviewed, or resolved. The first sign-in is username <strong>admin</strong> and password <strong>admin</strong>. From there you can add other admins and change any admin's password. Passwords are stored only as hashes on this device. Clearing this browser's saved data for the site puts the sign-in back to admin / admin and removes the saved comments.</p>
+        <p><button type="button" id="readme-admin-btn" class="btn-secondary">Open admin portal</button></p>
         <p><strong>Found a problem, or have an idea?</strong> Use the button below (or <strong>Send feedback</strong> in the footer). Rate the app, pick what your feedback is about, and describe what happened — the app writes the email for you and opens it in your mail app, addressed to the Homerun Baseball Ottawa team.</p>
         <p><button type="button" id="readme-feedback-btn" class="btn-secondary">💬 Send feedback</button></p>
       </section>
@@ -335,14 +338,98 @@
     </div>
   </section>
 
+  <!-- ADMIN PORTAL: review feedback comments and manage admin sign-ins.
+       Bootstrap account is username admin / password admin. -->
+  <section id="view-admin" class="view">
+    <h2>Admin</h2>
+
+    <div id="admin-gate">
+      <p class="hint" id="admin-gate-hint">Sign in to review feedback comments saved on this browser. The first account is username admin and password admin.</p>
+      <form id="admin-login-form" class="admin-form">
+        <div class="pfield">
+          <label for="admin-username">Username</label>
+          <input type="text" id="admin-username" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+        </div>
+        <div class="pfield">
+          <label for="admin-password">Password</label>
+          <input type="password" id="admin-password" name="password" autocomplete="current-password" required>
+        </div>
+        <p id="admin-login-error" class="admin-error" hidden></p>
+        <button type="submit">Sign in</button>
+      </form>
+    </div>
+
+    <div id="admin-portal" hidden>
+      <p class="hint" id="admin-signed-in" tabindex="-1">Signed in.</p>
+      <dl class="admin-stats" id="admin-stats"></dl>
+
+      <h3>Feedback comments</h3>
+      <p class="hint">These are comments saved on this browser when someone uses Send feedback. The email to the Homerun team still opens as before. Mark each comment as you triage it.</p>
+      <div class="admin-filter-bar" id="admin-feedback-filters" role="group" aria-label="Filter feedback comments">
+        <button type="button" class="btn-secondary admin-filter active" data-feedback-filter="all">All</button>
+        <button type="button" class="btn-secondary admin-filter" data-feedback-filter="new">New</button>
+        <button type="button" class="btn-secondary admin-filter" data-feedback-filter="reviewed">Reviewed</button>
+        <button type="button" class="btn-secondary admin-filter" data-feedback-filter="resolved">Resolved</button>
+      </div>
+      <div id="admin-feedback-list"></div>
+
+      <h3>Admin users</h3>
+      <ul class="admin-user-list" id="admin-user-list"></ul>
+
+      <h3>Change a password</h3>
+      <form id="admin-password-form" class="admin-form">
+        <div class="pfield">
+          <label for="admin-password-user">Admin</label>
+          <select id="admin-password-user" name="username"></select>
+        </div>
+        <div class="pfield">
+          <label for="admin-new-password">New password</label>
+          <input type="password" id="admin-new-password" name="new-password" autocomplete="new-password" required>
+        </div>
+        <div class="pfield">
+          <label for="admin-confirm-password">Confirm new password</label>
+          <input type="password" id="admin-confirm-password" name="confirm-password" autocomplete="new-password" required>
+        </div>
+        <p id="admin-password-error" class="admin-error" hidden></p>
+        <p id="admin-password-ok" class="admin-ok" hidden></p>
+        <button type="submit">Save password</button>
+      </form>
+
+      <h3>Add an admin</h3>
+      <form id="admin-create-form" class="admin-form">
+        <div class="pfield">
+          <label for="admin-new-username">Username</label>
+          <input type="text" id="admin-new-username" name="username" autocomplete="off" autocapitalize="none" spellcheck="false" required>
+        </div>
+        <div class="pfield">
+          <label for="admin-create-password">Password</label>
+          <input type="password" id="admin-create-password" name="new-password" autocomplete="new-password" required>
+        </div>
+        <div class="pfield">
+          <label for="admin-create-confirm">Confirm password</label>
+          <input type="password" id="admin-create-confirm" name="confirm-password" autocomplete="new-password" required>
+        </div>
+        <p id="admin-create-error" class="admin-error" hidden></p>
+        <p id="admin-create-ok" class="admin-ok" hidden></p>
+        <button type="submit">Add admin</button>
+      </form>
+
+      <div class="admin-actions">
+        <button type="button" id="admin-sign-out" class="btn-secondary">Sign out</button>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer id="app-footer" class="app-footer no-print">
   <span class="app-footer-name">Homerun Practice</span>
   <span class="app-footer-version">v<span id="app-version-label"></span></span>
+  <span class="app-footer-updated">Last updated <time id="app-updated-label" datetime="2026-11-02">2 Nov 2026</time></span>
   <button type="button" id="footer-whats-new" class="app-footer-link">What's new</button>
   <a href="changelog.html" id="footer-changelog" class="app-footer-link">Version history</a>
   <button type="button" id="footer-feedback" class="app-footer-link">Send feedback</button>
+  <button type="button" id="footer-admin" class="app-footer-link">Admin</button>
 </footer>
 
 <!-- PRACTICE PRINT ROOT: populated just before window.print() -->
@@ -373,6 +460,7 @@
 <script src="shell.js" defer></script>
 <script src="practice.js" defer></script>
 <script src="feedback.js" defer></script>
+<script src="admin.js" defer></script>
 <script src="appUpdates.js" defer></script>
 <script>
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {

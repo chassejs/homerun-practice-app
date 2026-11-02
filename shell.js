@@ -30,4 +30,8 @@
       init();
     }
   }
+
+  window.HRP_SHELL = {
+    showView: showView
+  };
 }());

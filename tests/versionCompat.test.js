@@ -298,6 +298,16 @@ test('changelog.js newest entry is the current release', function () {
   assertEqual(changelog[0].version, APP_VERSION, 'changelog.js newest entry version');
 });
 
+test('footer last-updated date matches the current release', function () {
+  const released = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'version.json'), 'utf8')).released;
+  const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+  const stamp = html.match(/<time id="app-updated-label" datetime="([^"]+)">([^<]*)<\/time>/);
+  assertEqual(changelog[0].date, released, 'changelog date matches version.json released');
+  assertEqual(!!stamp, true, 'footer has a last-updated time element');
+  assertEqual(stamp && stamp[1], changelog[0].date, 'footer datetime');
+  assertEqual(html.indexOf('Last updated') !== -1, true, 'footer says Last updated');
+});
+
 test('changelog.js entries are well-formed and ordered newest-first', function () {
   for (let i = 0; i < changelog.length; i++) {
     const entry = changelog[i];

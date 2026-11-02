@@ -61,6 +61,25 @@ computer. There is no cloud and no account.
 Because the app stores data in this browser (not a cloud account), exporting
 regularly is the safest way to avoid losing your plans.
 
+## Admin portal
+
+The footer **Admin** link opens a portal stored only in this browser. Its
+job is to review feedback comments that were sent from this device and to
+decide who else can sign in.
+
+The first account is username `admin` and password `admin`. After signing
+in you can add other admins and change any listed admin's password.
+Passwords are stored only as SHA-256 hashes. Clearing this browser's data
+for the site puts the sign-in back to `admin` / `admin` and removes the
+saved comments.
+
+Sending feedback still opens an email to the Homerun team. The same
+comment is kept on this browser so the portal can mark it new, reviewed,
+or resolved.
+
+The footer also shows **Last updated** — the date of the version you are
+running, taken from the newest release note.
+
 ## Drill data
 
 Drill content is generated from the Youth Baseball Canada knowledge base
@@ -103,6 +122,6 @@ five hex values; see [`styles.css`](styles.css).
   export/import, print)
 - `src/drills-data.js` — generated drill data (do not hand-edit)
 - `version.js`, `versionCompat.js`, `changelog.js`, `changelog.html`,
-  `appUpdates.js`, `uiModal.js`, `feedback.js` — version footer, What's New,
-  in-app update checks, and the feedback form (see
-  [`docs/VERSIONING.md`](docs/VERSIONING.md))
+  `appUpdates.js`, `uiModal.js`, `feedback.js`, `admin.js` — version footer,
+  What's New, in-app update checks, the feedback form, and the admin portal
+  (see [`docs/VERSIONING.md`](docs/VERSIONING.md))

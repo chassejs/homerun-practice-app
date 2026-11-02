@@ -10,6 +10,17 @@ window.HRP_CHANGELOG = (function () {
 
   return [
     {
+      version: '1.8',
+      date: '2026-11-02',
+      type: 'minor',
+      title: 'Admin portal and last-updated date',
+      highlights: [
+        'The footer shows the date this version was last updated, next to the version number.',
+        'Admin opens a portal for this browser. Sign in with username admin and password admin, then add other admins or change any admin\'s password. Passwords are stored only as hashes on this device.',
+        'The portal lists feedback comments sent from this browser so an admin can mark each one new, reviewed, or resolved. Sending feedback still opens the email as before.'
+      ]
+    },
+    {
       version: '1.7',
       date: '2026-08-23',
       type: 'minor',
