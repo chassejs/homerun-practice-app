@@ -169,6 +169,7 @@ After they confirm, the backup is migrated and restored without any data loss.
 - [ ] If the JSON payload shape changed: bump `DATA_VERSION` in `version.js`
 - [ ] If auto-migratable: add a `MIGRATIONS` entry in `versionCompat.js`
 - [ ] If breaking: add to `BREAKING_BOUNDARIES` and raise `MIN_COMPATIBLE_DATA_VERSION`
+- [ ] The newest `changelog.js` `date` matches `version.json` `"released"` — the footer **Last updated** line reads that date
 - [ ] Run `npm test` and confirm all tests pass
 - [ ] Bump the service worker cache name in `sw.js` to embed the new `APP_VERSION` (e.g. `homerun-practice-v1.4`) — `npm test` fails if you forget
 
@@ -184,4 +185,4 @@ Three pieces work together to keep coaches on the current build without ever ris
 
 **What's New** — on load, `appUpdates.js` compares `APP_VERSION` with `localStorage['homerun-practice/lastSeenVersion']` and, when the app is newer, shows the highlights for the current release from `changelog.js`. The last-seen value is written when the modal opens, so no dismissal route can leave it unrecorded. A brand-new user (no saved state) has the value recorded silently and sees nothing. The footer's *What's new* link reopens it on demand.
 
-Because the version number is read at runtime from `window.HRP_VERSION.APP_VERSION`, bumping `version.js` is the only place a release number changes in the app UI — the footer, the What's-New title, the feedback report, and the changelog page's "you are reading" line all follow automatically.
+Because the version number is read at runtime from `window.HRP_VERSION.APP_VERSION`, bumping `version.js` is the only place a release number changes in the app UI — the footer, the What's-New title, the feedback report, and the changelog page's "you are reading" line all follow automatically. The footer's **Last updated** date is the `date` of the newest `changelog.js` entry, which is the same day recorded in `version.json` as `released`. `appUpdates.js` writes that date into the footer on load.

@@ -1,6 +1,8 @@
 /* ===================================================================
    Homerun Practice — feedback.js
-   In-app feedback form that drafts a mailto: message. No network.
+   In-app feedback form that drafts a mailto: message and keeps a
+   local copy for the admin portal. The mailto needs no network
+   until the coach's own email app sends it.
    =================================================================== */
 
 window.HRP_FEEDBACK = (function () {
@@ -67,6 +69,111 @@ window.HRP_FEEDBACK = (function () {
   function screenLine() {
     if (typeof window === 'undefined' || !window.screen) return 'unknown';
     return window.screen.width + 'x' + window.screen.height;
+  }
+
+  var INBOX_KEY = 'homerun-practice/feedback/inbox/v1';
+  var INBOX_LIMIT = 200;
+  var STATUSES = { new: true, reviewed: true, resolved: true };
+
+  function browserStorage() {
+    try {
+      if (typeof localStorage !== 'undefined') return localStorage;
+    } catch (e) { /* private mode or file restrictions */ }
+    return null;
+  }
+
+  function readInbox(storage) {
+    var raw, parsed, i, item, out;
+    if (!storage || typeof storage.getItem !== 'function') return [];
+    try {
+      raw = storage.getItem(INBOX_KEY);
+    } catch (e) {
+      return [];
+    }
+    if (!raw) return [];
+    try {
+      parsed = JSON.parse(raw);
+    } catch (e2) {
+      return [];
+    }
+    if (!Array.isArray(parsed)) return [];
+    out = [];
+    for (i = 0; i < parsed.length; i++) {
+      item = parsed[i];
+      if (!item || typeof item.details !== 'string' || !item.id) continue;
+      out.push({
+        id: String(item.id),
+        createdAt: String(item.createdAt || ''),
+        rating: item.rating > 0 ? Number(item.rating) : 0,
+        category: String(item.category || ''),
+        categoryLabel: String(item.categoryLabel || item.category || ''),
+        details: item.details,
+        status: STATUSES[item.status] ? item.status : 'new',
+        version: String(item.version || '')
+      });
+    }
+    out.sort(function (a, b) {
+      if (a.createdAt === b.createdAt) return 0;
+      return a.createdAt < b.createdAt ? 1 : -1;
+    });
+    return out;
+  }
+
+  function writeInbox(storage, list) {
+    var wrote;
+    try {
+      wrote = storage.setItem(INBOX_KEY, JSON.stringify(list));
+    } catch (e) {
+      return false;
+    }
+    return wrote !== false;
+  }
+
+  function recordComment(fields, storage) {
+    var store = storage || browserStorage();
+    var details, list, comment;
+    fields = fields || {};
+    if (!store) return { ok: false, error: 'storage' };
+    details = trim(fields.details);
+    if (!details) return { ok: false, error: 'details' };
+    list = readInbox(store);
+    comment = {
+      id: 'f' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+      createdAt: new Date().toISOString(),
+      rating: fields.rating > 0 ? Number(fields.rating) : 0,
+      category: String(fields.category || ''),
+      categoryLabel: String(fields.categoryLabel || fields.category || ''),
+      details: details,
+      status: 'new',
+      version: appVersion()
+    };
+    list.unshift(comment);
+    if (list.length > INBOX_LIMIT) list = list.slice(0, INBOX_LIMIT);
+    if (!writeInbox(store, list)) return { ok: false, error: 'storage' };
+    return { ok: true, comment: comment };
+  }
+
+  function listComments(storage) {
+    return readInbox(storage || browserStorage());
+  }
+
+  function setCommentStatus(id, status, storage) {
+    var store = storage || browserStorage();
+    var list, i, found;
+    if (!store) return { ok: false, error: 'storage' };
+    if (!STATUSES[status]) return { ok: false, error: 'status' };
+    list = readInbox(store);
+    found = false;
+    for (i = 0; i < list.length; i++) {
+      if (list[i].id === id) {
+        list[i].status = status;
+        found = true;
+        break;
+      }
+    }
+    if (!found) return { ok: false, error: 'unknown' };
+    if (!writeInbox(store, list)) return { ok: false, error: 'storage' };
+    return { ok: true };
   }
 
   function buildBody(rating, catLabel, details) {
@@ -157,13 +264,15 @@ window.HRP_FEEDBACK = (function () {
     }
   }
 
-  function showConfirmation(box, api, subject, fullBody, truncated) {
+  function showConfirmation(box, api, subject, fullBody, truncated, savedLocally) {
     api.setTitle('Feedback ready to send');
     clearKeepTitle(box);
 
     box.appendChild(api.el('p', {
       class: 'feedback-confirm',
-      text: 'Your email app should have opened with the message ready. You still need to press Send there.'
+      text: savedLocally
+        ? 'Your email app should have opened with the message ready. You still need to press Send there. A copy of this comment was saved on this browser for the admin portal.'
+        : 'Your email app should have opened with the message ready. You still need to press Send there.'
     }));
     box.appendChild(api.el('p', {
       class: 'feedback-confirm-note',
@@ -208,7 +317,7 @@ window.HRP_FEEDBACK = (function () {
 
         box.appendChild(api.el('p', {
           class: 'feedback-intro',
-          text: 'Feedback goes to the Homerun Baseball Ottawa team. Pressing Send opens your email app with the message already written, ready to send.'
+          text: 'Feedback goes to the Homerun Baseball Ottawa team. Pressing Send opens your email app with the message already written, ready to send. A copy is also kept on this browser so an admin can review it.'
         }));
 
         var group = api.el('div', {
@@ -421,6 +530,12 @@ window.HRP_FEEDBACK = (function () {
           var catLabel = categoryLabel(categoryEl.value);
           var subject = buildSubject(catLabel, rating);
           var fullBody = buildBody(rating, catLabel, details);
+          var saved = recordComment({
+            rating: rating,
+            category: categoryEl.value,
+            categoryLabel: catLabel,
+            details: details
+          });
           var mailBody = fullBody;
           var truncated = false;
           if (fullBody.length > MAIL_BODY_LIMIT) {
@@ -434,7 +549,7 @@ window.HRP_FEEDBACK = (function () {
             window.location.href = mailtoUrl;
           } catch (err) {}
 
-          showConfirmation(box, api, subject, fullBody, truncated);
+          showConfirmation(box, api, subject, fullBody, truncated, saved.ok === true);
         });
 
         box.appendChild(form);
@@ -443,6 +558,9 @@ window.HRP_FEEDBACK = (function () {
   }
 
   return {
-    open: open
+    open: open,
+    recordComment: recordComment,
+    listComments: listComments,
+    setCommentStatus: setCommentStatus
   };
 }());

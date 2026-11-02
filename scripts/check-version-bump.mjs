@@ -37,6 +37,7 @@ const APP_SOURCE_PATTERNS = [
   /^practice\.js$/,
   /^sw\.js$/,
   /^feedback\.js$/,
+  /^admin\.js$/,
   /^appUpdates\.js$/,
   /^versionCompat\.js$/,
   /^changelog\.html$/,

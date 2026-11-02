@@ -207,9 +207,90 @@ input[type="checkbox"] { width: 1.1rem; height: 1.1rem; cursor: pointer; }
   font-weight: 600;
   color: var(--brand-navy);
 }
-.app-footer-version {
+.app-footer-version,
+.app-footer-updated {
   font-variant-numeric: tabular-nums;
   color: var(--color-muted);
+}
+.app-footer-updated time {
+  font-weight: inherit;
+  color: inherit;
+}
+
+.admin-form { max-width: 28rem; margin: 0.75rem 0 1.25rem; }
+.admin-error,
+.admin-ok {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+}
+.admin-error { color: var(--brand-red); }
+.admin-ok { color: var(--brand-navy); }
+.admin-stats {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr;
+  gap: 0.35rem 0.75rem;
+  margin: 0.75rem 0 1.25rem;
+  max-width: 36rem;
+}
+.admin-stats dt { font-weight: 700; margin: 0; }
+.admin-stats dd { margin: 0; }
+.admin-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.5rem 0 0.85rem;
+}
+button.admin-filter.active,
+button.admin-filter.active:hover {
+  background: var(--brand-navy);
+  color: #fff;
+  border-color: var(--brand-navy);
+}
+.admin-comment {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.75rem 0.85rem;
+  margin-bottom: 0.75rem;
+  background: var(--brand-cream);
+}
+.admin-comment-meta {
+  margin: 0 0 0.35rem;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+.admin-comment-body {
+  margin: 0 0 0.65rem;
+  white-space: pre-wrap;
+}
+.admin-comment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.admin-status {
+  display: inline-block;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.4rem;
+  border-radius: 3px;
+  vertical-align: baseline;
+}
+.admin-status-new { background: var(--brand-red); color: #fff; }
+.admin-status-reviewed { background: var(--brand-navy); color: #fff; }
+.admin-status-resolved { background: #d8d3c6; color: var(--brand-navy); }
+.admin-user-list {
+  margin: 0.35rem 0 1.1rem;
+  padding-left: 1.2rem;
+}
+.admin-user-list li { margin: 0.2rem 0; }
+.admin-actions { margin-top: 0.25rem; }
+#admin-signed-in:focus { outline: 2px solid var(--brand-navy); outline-offset: 2px; }
+@media (max-width: 560px) {
+  .admin-stats { grid-template-columns: 1fr; gap: 0.1rem 0; }
+  .admin-stats dd { margin-bottom: 0.55rem; }
 }
 button.app-footer-link,
 a.app-footer-link {
@@ -396,6 +477,7 @@ body.modal-open { overflow: hidden; }
   margin-bottom: 0.25rem;
 }
 .pfield input[type="text"],
+.pfield input[type="password"],
 .pfield input[type="date"],
 .pfield input[type="time"],
 .pfield input[type="search"],
